@@ -1,0 +1,131 @@
+# `0x21020000` 主循环
+
+主循环页以 `dst-scripts/update.lua` 为中心。
+`scheduler.lua`、组件更新、StateGraph 和 Brain 是 `Update(dt)` 中相邻的更新阶段，不是彼此的调用链。
+
+## `0x21021000` 本页定位
+
+### `0x21021100` 要回答的运行时问题
+
+#### `0x21021110` 源码阅读目标
+
+##### `0x21021111` 验证点
+
+目标是确认每个 tick 的 Lua 更新顺序。
+普通游戏 tick 进入 `Update(dt)`。
+静态 tick 进入 `StaticUpdate(dt)`。
+暂停服务器不会执行普通 `Update(dt)`，而是由 `StaticUpdate(dt)` 处理静态 scheduler 和暂停态静态组件。
+
+## `0x21022000` 源码锚点
+
+| 文件 | 入口 | 用途 |
+| --- | --- | --- |
+| `dst-scripts/update.lua` | `Update` | 非暂停游戏 tick 的 Lua 主更新入口 |
+| `dst-scripts/update.lua` | `StaticUpdate` | 静态 tick、暂停态静态组件和静态 SG 事件入口 |
+| `dst-scripts/update.lua` | `PostUpdate` | emitter 和 `UpdateLooper_PostUpdate` 阶段 |
+| `dst-scripts/scheduler.lua` | `RunScheduler` | 普通 scheduler 的 `OnTick` 与 `Run` |
+| `dst-scripts/scheduler.lua` | `RunStaticScheduler` | 静态 scheduler 的 `OnTick` 与 `Run` |
+| `dst-scripts/stategraph.lua` | `StateGraphWrangler:Update` | 状态机 tick 更新和事件处理 |
+| `dst-scripts/brain.lua` | `BrainWrangler:Update` | Brain tick 更新和 sleep tick 管理 |
+| `dst-scripts/mainfunctions.lua` | `GetTickTime` | Lua tick 时间换算来源 |
+
+### `0x21022100` 主锚点
+
+#### `0x21022110` `dst-scripts/update.lua`
+
+##### `0x21022111` 搜索信号
+
+先搜索 `function Update`。
+再在同一个文件里确认 `RunScheduler`、组件 `OnUpdate`、`SGManager:Update` 和 `BrainManager:Update` 的顺序。
+
+## `0x21023000` 运行流程
+
+~~~mermaid
+flowchart TD
+    A["engine tick"] --> B["update.lua: Update(dt)"]
+    B --> C["RunScheduler for each unseen tick"]
+    C --> D["StaticComponentUpdates"]
+    D --> E["component OnUpdate(dt)"]
+    E --> F["SGManager:Update(i)"]
+    F --> G["BrainManager:Update(i)"]
+    H["engine static tick"] --> I["StaticUpdate(dt)"]
+    I --> J["RunStaticScheduler for each unseen static tick"]
+    J --> K["TickRPCQueue"]
+    K --> L["paused static component OnStaticUpdate"]
+    L --> M["SGManager:UpdateEvents when paused"]
+    N["engine post update"] --> O["PostUpdate(dt)"]
+    O --> P["EmitterManager and UpdateLooper_PostUpdate"]
+~~~
+
+### `0x21023100` 流程分段
+
+#### `0x21023110` `Update(dt)` 普通 Tick
+
+##### `0x21023111` 边界条件
+
+`Update(dt)` 首先断言服务器没有暂停。
+它用 `TheSim:GetTick()` 和 `last_tick_seen` 补跑尚未处理的 tick，并逐个调用 `RunScheduler(i)`。
+组件 `OnUpdate(dt)` 在 scheduler 之后、StateGraph 和 Brain 之前执行。
+
+#### `0x21023120` `SGManager` 与 `BrainManager`
+
+##### `0x21023121` 边界条件
+
+`SGManager:Update(i)` 和 `BrainManager:Update(i)` 都在 `update.lua` 的 tick 循环尾部调用。
+`RunScheduler()` 不会调用它们。
+读 StateGraph 或 Brain 时，应把 `update.lua` 当成主循环来源，把各自 manager 当成子系统入口。
+
+#### `0x21023130` `StaticUpdate(dt)` 静态 Tick
+
+##### `0x21023131` 边界条件
+
+`StaticUpdate(dt)` 使用 `TheSim:GetStaticTick()` 和 `last_static_tick_seen` 补跑 `RunStaticScheduler(i)`。
+只有 `TheNet:IsServerPaused()` 为真时，它才遍历静态组件并调用 `OnStaticUpdate(0)`。
+暂停态下还会逐 tick 调用 `SGManager:UpdateEvents()`，但不调用 `SGManager:Update()`。
+
+## `0x21024000` 结构细节
+
+### `0x21024100` 数据结构与生命周期
+
+#### `0x21024110` Tick 去重
+
+##### `0x21024111` 需要核对的字段
+
+`last_tick_seen` 和 `last_static_tick_seen` 防止同一 tick 被重复处理。
+如果引擎一次推进多个 tick，Lua 用 `for i = last_tick_seen + 1, tick do` 补跑 scheduler、SG 和 Brain。
+
+#### `0x21024120` 更新集合
+
+##### `0x21024121` 需要核对的字段
+
+组件更新来自 `UpdatingEnts`、`NewUpdatingEnts` 和 `StopUpdatingComponents`。
+StateGraph 使用 `SGManager` 内部的 `updaters`、`tickwaiters`、`haveEvents`。
+Brain 使用 `BrainManager` 内部的 `updaters`、`tickwaiters` 和 `_safe_updaters`。
+
+## `0x21025000` 阅读与验证路线
+
+### `0x21025100` 从哪里开始读源码
+
+~~~bash
+rg -n \
+  -e "function Update" \
+  -e "function StaticUpdate" \
+  -e "RunScheduler" \
+  -e "RunStaticScheduler" \
+  -e "OnUpdate\\(dt\\)" \
+  -e "SGManager:Update" \
+  -e "BrainManager:Update" \
+  -e "GetTickTime" \
+  dst-scripts/update.lua \
+  dst-scripts/scheduler.lua \
+  dst-scripts/stategraph.lua \
+  dst-scripts/brain.lua \
+  dst-scripts/mainfunctions.lua
+~~~
+
+#### `0x21025110` 推荐顺序
+
+##### `0x21025111` 最小闭环
+
+从 `update.lua` 的 `Update(dt)` 开始画顺序。
+然后分别跳到 `scheduler.lua`、`stategraph.lua`、`brain.lua` 确认每个 manager 内部如何处理 sleep、wake 和 updater 列表。

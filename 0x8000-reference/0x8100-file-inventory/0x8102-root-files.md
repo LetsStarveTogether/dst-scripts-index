@@ -1,0 +1,259 @@
+# `0x81020000` 根文件清单
+
+本页只列 `dst-scripts` 根目录 Lua 文件和主入口。
+
+## `0x81021000` 根 Lua 文件
+
+### `0x81021100` 清单入口
+
+#### `0x81021110` 机器可读块
+
+##### `0x81021111` 验证点
+
+根目录 Lua 文件共 218 个。
+
+- `dst-scripts/achievements.lua`
+- `dst-scripts/actions.lua`
+- `dst-scripts/barterqueue.lua`
+- `dst-scripts/beefalo_clothing.lua`
+- `dst-scripts/behaviourtree.lua`
+- `dst-scripts/brain.lua`
+- `dst-scripts/bufferedaction.lua`
+- `dst-scripts/builtinusercommands.lua`
+- `dst-scripts/camerashake.lua`
+- `dst-scripts/characterutil.lua`
+- `dst-scripts/chathistory.lua`
+- `dst-scripts/class.lua`
+- `dst-scripts/clothing.lua`
+- `dst-scripts/componentactions.lua`
+- `dst-scripts/componentutil.lua`
+- `dst-scripts/config.lua`
+- `dst-scripts/consolecommands.lua`
+- `dst-scripts/consolescreensettings.lua`
+- `dst-scripts/constants.lua`
+- `dst-scripts/containers.lua`
+- `dst-scripts/cookbookdata.lua`
+- `dst-scripts/cooking.lua`
+- `dst-scripts/crafting_sorting.lua`
+- `dst-scripts/craftingmenuprofile.lua`
+- `dst-scripts/createstringspo.lua`
+- `dst-scripts/createstringspo_dlc.lua`
+- `dst-scripts/curse_monkey_util.lua`
+- `dst-scripts/custompresets.lua`
+- `dst-scripts/datagrid.lua`
+- `dst-scripts/debugcommands.lua`
+- `dst-scripts/debughelpers.lua`
+- `dst-scripts/debugkeys.lua`
+- `dst-scripts/debugmenu.lua`
+- `dst-scripts/debugprint.lua`
+- `dst-scripts/debugsounds.lua`
+- `dst-scripts/debugtools.lua`
+- `dst-scripts/dlcsupport.lua`
+- `dst-scripts/dlcsupport_strings.lua`
+- `dst-scripts/dlcsupport_worldgen.lua`
+- `dst-scripts/dumper.lua`
+- `dst-scripts/easing.lua`
+- `dst-scripts/emitters.lua`
+- `dst-scripts/emoji_items.lua`
+- `dst-scripts/emote_items.lua`
+- `dst-scripts/emotes.lua`
+- `dst-scripts/entitlementlookups.lua`
+- `dst-scripts/entityreplica.lua`
+- `dst-scripts/entityscript.lua`
+- `dst-scripts/entityscriptproxy.lua`
+- `dst-scripts/equipslotutil.lua`
+- `dst-scripts/eventachievements.lua`
+- `dst-scripts/events.lua`
+- `dst-scripts/falloffdefs.lua`
+- `dst-scripts/fileutil.lua`
+- `dst-scripts/firelevel.lua`
+- `dst-scripts/fix_character_strings.lua`
+- `dst-scripts/fonthelper.lua`
+- `dst-scripts/fonts.lua`
+- `dst-scripts/frontend.lua`
+- `dst-scripts/fx.lua`
+- `dst-scripts/gamelogic.lua`
+- `dst-scripts/gamemodes.lua`
+- `dst-scripts/generickv.lua`
+- `dst-scripts/giantutils.lua`
+- `dst-scripts/globalvariableoverrides.lua`
+- `dst-scripts/globalvariableoverrides_clean.lua`
+- `dst-scripts/globalvariableoverrides_monkey.lua`
+- `dst-scripts/globalvariableoverrides_pax_server.lua`
+- `dst-scripts/groundcreepdefs.lua`
+- `dst-scripts/guitartab_dsmaintheme.lua`
+- `dst-scripts/haptics.lua`
+- `dst-scripts/idleanimations_items.lua`
+- `dst-scripts/input.lua`
+- `dst-scripts/inspect.lua`
+- `dst-scripts/item_blacklist.lua`
+- `dst-scripts/json.lua`
+- `dst-scripts/klump.lua`
+- `dst-scripts/klump_files.lua`
+- `dst-scripts/knownerrors.lua`
+- `dst-scripts/lavaarena_achievement_quest_defs.lua`
+- `dst-scripts/lavaarena_achievements.lua`
+- `dst-scripts/lavaarena_communityprogression.lua`
+- `dst-scripts/lighting.lua`
+- `dst-scripts/loadingtipsdata.lua`
+- `dst-scripts/main.lua`
+- `dst-scripts/mainfunctions.lua`
+- `dst-scripts/maputil.lua`
+- `dst-scripts/math2d.lua`
+- `dst-scripts/mathutil.lua`
+- `dst-scripts/messagebottletreasures.lua`
+- `dst-scripts/metaclass.lua`
+- `dst-scripts/misc_items.lua`
+- `dst-scripts/mixer.lua`
+- `dst-scripts/mixes.lua`
+- `dst-scripts/modcompatability.lua`
+- `dst-scripts/modindex.lua`
+- `dst-scripts/mods.lua`
+- `dst-scripts/modutil.lua`
+- `dst-scripts/motdmanager.lua`
+- `dst-scripts/netvars.lua`
+- `dst-scripts/networkclientrpc.lua`
+- `dst-scripts/networking.lua`
+- `dst-scripts/noisetilefunctions.lua`
+- `dst-scripts/notetable_dsmaintheme.lua`
+- `dst-scripts/ocean_util.lua`
+- `dst-scripts/perfutil.lua`
+- `dst-scripts/physics.lua`
+- `dst-scripts/plantregistrydata.lua`
+- `dst-scripts/platformpostload.lua`
+- `dst-scripts/play_commonfn.lua`
+- `dst-scripts/play_generalscripts.lua`
+- `dst-scripts/play_the_doll.lua`
+- `dst-scripts/play_the_princess_yoth.lua`
+- `dst-scripts/play_the_vault.lua`
+- `dst-scripts/play_the_veil.lua`
+- `dst-scripts/playerdeaths.lua`
+- `dst-scripts/playerhistory.lua`
+- `dst-scripts/playerprofile.lua`
+- `dst-scripts/popupmanager.lua`
+- `dst-scripts/postprocesseffects.lua`
+- `dst-scripts/prefablist.lua`
+- `dst-scripts/prefabs.lua`
+- `dst-scripts/prefabskin.lua`
+- `dst-scripts/prefabskins.lua`
+- `dst-scripts/prefabswaps.lua`
+- `dst-scripts/prefabutil.lua`
+- `dst-scripts/preloadsounds.lua`
+- `dst-scripts/preparedfoods.lua`
+- `dst-scripts/preparedfoods_warly.lua`
+- `dst-scripts/preparednonfoods.lua`
+- `dst-scripts/profiler.lua`
+- `dst-scripts/progressionconstants.lua`
+- `dst-scripts/quagmire_achievements.lua`
+- `dst-scripts/quagmire_recipebook.lua`
+- `dst-scripts/recipe.lua`
+- `dst-scripts/recipes.lua`
+- `dst-scripts/recipes_filter.lua`
+- `dst-scripts/regrowthutil.lua`
+- `dst-scripts/reload.lua`
+- `dst-scripts/savefileupgrades.lua`
+- `dst-scripts/saveindex.lua`
+- `dst-scripts/scheduler.lua`
+- `dst-scripts/scrapbook_prefabs.lua`
+- `dst-scripts/scrapbookpartitions.lua`
+- `dst-scripts/serverpreferences.lua`
+- `dst-scripts/shadeeffects.lua`
+- `dst-scripts/shardindex.lua`
+- `dst-scripts/shardnetworking.lua`
+- `dst-scripts/shardsaveindex.lua`
+- `dst-scripts/signgenerator.lua`
+- `dst-scripts/simutil.lua`
+- `dst-scripts/skilltreedata.lua`
+- `dst-scripts/skin_affinity_info.lua`
+- `dst-scripts/skin_assets.lua`
+- `dst-scripts/skin_gifts.lua`
+- `dst-scripts/skin_set_info.lua`
+- `dst-scripts/skin_strings.lua`
+- `dst-scripts/skins_defs_data.lua`
+- `dst-scripts/skinsfiltersutils.lua`
+- `dst-scripts/skinstradeutils.lua`
+- `dst-scripts/skinsutils.lua`
+- `dst-scripts/speech_walter.lua`
+- `dst-scripts/speech_wanda.lua`
+- `dst-scripts/speech_warly.lua`
+- `dst-scripts/speech_wathgrithr.lua`
+- `dst-scripts/speech_waxwell.lua`
+- `dst-scripts/speech_webber.lua`
+- `dst-scripts/speech_wendy.lua`
+- `dst-scripts/speech_wickerbottom.lua`
+- `dst-scripts/speech_willow.lua`
+- `dst-scripts/speech_wilson.lua`
+- `dst-scripts/speech_winona.lua`
+- `dst-scripts/speech_wolfgang.lua`
+- `dst-scripts/speech_woodie.lua`
+- `dst-scripts/speech_wormwood.lua`
+- `dst-scripts/speech_wortox.lua`
+- `dst-scripts/speech_wurt.lua`
+- `dst-scripts/speech_wx78.lua`
+- `dst-scripts/spicedfoods.lua`
+- `dst-scripts/splitscreenutils_pc.lua`
+- `dst-scripts/stacktrace.lua`
+- `dst-scripts/standardcomponents.lua`
+- `dst-scripts/stategraph.lua`
+- `dst-scripts/stats.lua`
+- `dst-scripts/strict.lua`
+- `dst-scripts/strings.lua`
+- `dst-scripts/strings_pretranslated.lua`
+- `dst-scripts/strings_stageactor.lua`
+- `dst-scripts/stringutil.lua`
+- `dst-scripts/techtree.lua`
+- `dst-scripts/tiledefs.lua`
+- `dst-scripts/tilegroups.lua`
+- `dst-scripts/tilemanager.lua`
+- `dst-scripts/trade_recipes.lua`
+- `dst-scripts/translator.lua`
+- `dst-scripts/traps.lua`
+- `dst-scripts/tuning.lua`
+- `dst-scripts/tuning_override.lua`
+- `dst-scripts/update.lua`
+- `dst-scripts/upsell.lua`
+- `dst-scripts/usercommands.lua`
+- `dst-scripts/util.lua`
+- `dst-scripts/vec3util.lua`
+- `dst-scripts/vector3.lua`
+- `dst-scripts/vecutil.lua`
+- `dst-scripts/voteutil.lua`
+- `dst-scripts/wintersfeastcookedfoods.lua`
+- `dst-scripts/wordfilter.lua`
+- `dst-scripts/worldentities.lua`
+- `dst-scripts/worldgen_main.lua`
+- `dst-scripts/worldsettings_overrides.lua`
+- `dst-scripts/worldsettingsutil.lua`
+- `dst-scripts/worldtiledefs.lua`
+- `dst-scripts/writeables.lua`
+- `dst-scripts/wx78_moduledefs.lua`
+- `dst-scripts/wxputils.lua`
+- `dst-scripts/yotb_costumes.lua`
+- `dst-scripts/yotb_sewing.lua`
+
+## `0x81022000` 主入口文件
+
+### `0x81022100` 清单入口
+
+#### `0x81022110` 机器可读块
+
+##### `0x81022111` 验证点
+
+以下文件是阅读运行时的第一组入口。
+
+- `dst-scripts/main.lua`
+- `dst-scripts/mainfunctions.lua`
+- `dst-scripts/gamelogic.lua`
+- `dst-scripts/scheduler.lua`
+
+## `0x81023000` 根非 Lua 文件
+
+### `0x81023100` 清单入口
+
+#### `0x81023110` 机器可读块
+
+##### `0x81023111` 验证点
+
+根目录非 Lua 跟踪文件只有一个。
+
+- `dst-scripts/controller.vdf`
