@@ -158,6 +158,14 @@ mod 分支会遍历 `self.modactioncomponents`，再从 `MOD_COMPONENT_ACTIONS` 
 典型例子包括划船失败动作、植物注册表研究动作，以及部署类动作在不同点位目标之间的选择。
 因此排查“客户端看到了一个动作，服务端却重建成另一个动作”时，必须同时看 `actions.lua`、`playercontroller.lua` 和 `componentactions.lua`。
 
+## `0x32014711` 结构细节 / Carnival 高尔夫动作 / `GOLF_START_AIMING` 与 `TERRAFORM_REMOVE` / 搜索信号
+
+Carnival 高尔夫提供了一个新的候选动作样例。
+`componentactions.lua` 的 `EQUIPPED.golfclub` 分支在右键目标带 `golfable` 且目标未被占用时追加 `GOLF_START_AIMING`。
+`PlayerActionPicker` 对已经瞄准的球杆有额外分支，停止瞄准和开始蓄力不只依赖组件 collector。
+`USEITEM.terraformer` 对带 `terraformerremoveable` 的目标追加 `TERRAFORM_REMOVE`。
+最终执行仍回到 `actions.lua`，再调用 `golfclub:StartAiming`、`golfclub_reticule:StartCharging` 或 `terraformerremoveable:TryToRemove`。
+
 ## `0x32015100` 阅读与验证路线 / 从哪里开始读源码
 
 ~~~bash
@@ -172,6 +180,10 @@ rg -n "EntityScript:IsActionValid|RegisterComponentActions|modactioncomponents|C
 rg -n "ACTIONS =|Action\\(|\\.rmb|\\.validfn" dst-scripts/actions.lua
 rg -n "SortActionList|actionfilter|BufferedAction\\(" \
   dst-scripts/components/playeractionpicker.lua
+rg -n "GOLF_START_AIMING|GOLF_START_CHARGING|TERRAFORM_REMOVE|golfclub|terraformerremoveable" \
+  dst-scripts/componentactions.lua \
+  dst-scripts/components/playeractionpicker.lua \
+  dst-scripts/actions.lua
 ~~~
 
 ### `0x32015111` 推荐顺序 / 最小闭环

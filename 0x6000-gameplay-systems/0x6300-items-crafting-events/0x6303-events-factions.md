@@ -31,6 +31,9 @@ DST Lua 里没有一个统一的 faction 表覆盖所有敌友关系。
 | `dst-scripts/prefabs/forest.lua` | `AddComponent("carnivalevent")` | 世界活动组件装配 |
 | `dst-scripts/components/carnivalevent.lua` | `SpawnCarnivalHost` | Carnival 世界组件样例 |
 | `dst-scripts/prefabs/carnival_plaza.lua` | `RegisterPlaza` | 活动 prefab 与世界组件连接 |
+| `dst-scripts/prefabs/carnivalgame_golfgame.lua` | `AddGolfProp` / `SaveCourseData` | Carnival 高尔夫球场装配与持久化 |
+| `dst-scripts/components/golfclub.lua` | `StartAiming` / `OnSwingHit` | 高尔夫球杆瞄准与挥杆入口 |
+| `dst-scripts/components/golfable.lua` | `OnHit` / `OnExternalPhysics` | 高尔夫球受击和外力入口 |
 | `dst-scripts/components/yoth_knightmanager.lua` | `IsKnightShrineActive` | Year of the Horse 管理器样例 |
 | `dst-scripts/components/leader.lua` | `AddFollower` | 追随者集合 |
 | `dst-scripts/components/follower.lua` | `SetLeader` | 追随关系和忠诚时间 |
@@ -61,6 +64,7 @@ flowchart TD
     F --> G["carnivalevent.lua / YOT managers"]
     G --> H["event prefabs: plaza, shrine, stage, race"]
     H --> I["leader/follower/combat/tag checks"]
+    G --> J["carnivalgame_golfgame / golfclub / golfable"]
 ~~~
 
 ### `0x63033111` 活动依赖加载 / Global、backend 与 Frontend / 边界条件
@@ -78,6 +82,14 @@ frontend prefab 则跟随当前 `SPECIAL_EVENT_FRONTEND_PREFABS`。
 `carnival_plaza` 在活动开启时添加 `activatable`，并通过 `TheWorld.components.carnivalevent:RegisterPlaza`
 登记 plaza。
 这条链路能说明活动逻辑如何从全局开关落到具体世界实体。
+
+### `0x63033221` Carnival 高尔夫样例 / `golfclub` 到 `golfable` / 验证点
+
+`carnivalgame_golfgame` 负责球场边界、`courseparts`、`trackedcourseparts`、`SaveCourseData` 与分数。
+`recipes.lua` 先通过 `carnivalgame_golfgame_kit_*` 提供球场套件，再用 `TECH.CARNIVAL_GOLFPROPS_ONE` 限制场内道具配方。
+`componentactions.lua` 的 `golfclub` collector 产生 `ACTIONS.GOLF_START_AIMING`。
+`actions.lua` 再把瞄准交给 `components/golfclub.lua`，挥杆后由 `golfable:OnHit` 推动物理速度。
+`TERRAFORM_REMOVE` 是同一玩法的移除分支，它要求目标带 `terraformerremoveable` 组件。
 
 ### `0x63033311` 阵营与目标 / `Leader`、`Follower` 与 `Combat` / 验证点
 
@@ -124,6 +136,17 @@ rg -n "carnivalevent|RegisterPlaza|SpawnCarnivalHost|IsKnightShrineActive" \
   dst-scripts/prefabs/carnival_plaza.lua \
   dst-scripts/components/yoth_knightmanager.lua
 
+rg -n "carnivalgame_golfgame_kit|CARNIVAL_GOLFPROPS_ONE|IsGolfPropWithinGolfArea" \
+  dst-scripts/recipes.lua
+
+rg -n "GOLF_START_AIMING|GOLF_START_CHARGING|TERRAFORM_REMOVE|golfclub|golfable" \
+  dst-scripts/actions.lua \
+  dst-scripts/componentactions.lua \
+  dst-scripts/components/golfclub.lua \
+  dst-scripts/components/golfable.lua \
+  dst-scripts/components/terraformerremoveable.lua \
+  dst-scripts/prefabs/carnivalgame_golfgame.lua
+
 rg -n "AddFollower|SetLeader|TryRetarget|SetTarget|leaderchanged" \
   dst-scripts/components/leader.lua \
   dst-scripts/components/follower.lua \
@@ -135,4 +158,4 @@ rg -n "AddFollower|SetLeader|TryRetarget|SetTarget|leaderchanged" \
 先从 `constants.lua` 确认活动名和开关函数。
 再读 `simutil.lua` 的活动应用函数。
 然后读 `mainfunctions.lua` 与 `gamelogic.lua`，确认活动 prefab 何时加载。
-最后用 Carnival 或 YOTH 作为样例，追到世界组件、具体 prefab 和 leader/follower/combat 关系。
+最后用 Carnival、Carnival 高尔夫或 YOTH 作为样例，追到世界组件、具体 prefab 和 leader/follower/combat 关系。

@@ -1,6 +1,6 @@
 # `0x81010000` 完整文件清单
 
-本页列出 `git ls-files --recurse-submodules dst-scripts` 返回的全部 4028 个路径。
+本页列出 `git ls-files --recurse-submodules dst-scripts` 返回的全部 4045 个路径。
 
 ## `0x81011111` 审计口径 / 命令来源 / `git ls-files` / 验证点
 
@@ -520,6 +520,11 @@ git ls-files --recurse-submodules dst-scripts
 - `dst-scripts/components/giftreceiver.lua`
 - `dst-scripts/components/gingerbreadhunter.lua`
 - `dst-scripts/components/globaltrackingicon.lua`
+- `dst-scripts/components/golfable.lua`
+- `dst-scripts/components/golfballspinner.lua`
+- `dst-scripts/components/golfclub.lua`
+- `dst-scripts/components/golfclub_reticule.lua`
+- `dst-scripts/components/golfpropitem.lua`
 - `dst-scripts/components/grabbable.lua`
 - `dst-scripts/components/gravediggable.lua`
 - `dst-scripts/components/gravedigger.lua`
@@ -947,6 +952,7 @@ git ls-files --recurse-submodules dst-scripts
 - `dst-scripts/components/temperature.lua`
 - `dst-scripts/components/temperatureoverrider.lua`
 - `dst-scripts/components/terraformer.lua`
+- `dst-scripts/components/terraformerremoveable.lua`
 - `dst-scripts/components/thief.lua`
 - `dst-scripts/components/timer.lua`
 - `dst-scripts/components/toadstoolspawner.lua`
@@ -1847,6 +1853,7 @@ git ls-files --recurse-submodules dst-scripts
 - `dst-scripts/prefabs/carnival_decor.lua`
 - `dst-scripts/prefabs/carnival_food.lua`
 - `dst-scripts/prefabs/carnival_gametoken.lua`
+- `dst-scripts/prefabs/carnival_golfclub.lua`
 - `dst-scripts/prefabs/carnival_host.lua`
 - `dst-scripts/prefabs/carnival_plaza.lua`
 - `dst-scripts/prefabs/carnival_prizebooth.lua`
@@ -1858,6 +1865,13 @@ git ls-files --recurse-submodules dst-scripts
 - `dst-scripts/prefabs/carnivaldecor_lamp.lua`
 - `dst-scripts/prefabs/carnivalgame_common.lua`
 - `dst-scripts/prefabs/carnivalgame_feedchicks.lua`
+- `dst-scripts/prefabs/carnivalgame_golf_hole.lua`
+- `dst-scripts/prefabs/carnivalgame_golf_meshdata.lua`
+- `dst-scripts/prefabs/carnivalgame_golf_shape.lua`
+- `dst-scripts/prefabs/carnivalgame_golf_tee.lua`
+- `dst-scripts/prefabs/carnivalgame_golfball.lua`
+- `dst-scripts/prefabs/carnivalgame_golfgame.lua`
+- `dst-scripts/prefabs/carnivalgame_golfprops.lua`
 - `dst-scripts/prefabs/carnivalgame_herding.lua`
 - `dst-scripts/prefabs/carnivalgame_memory.lua`
 - `dst-scripts/prefabs/carnivalgame_placementblocker.lua`
@@ -2138,6 +2152,7 @@ git ls-files --recurse-submodules dst-scripts
 - `dst-scripts/prefabs/gnarwail_horn.lua`
 - `dst-scripts/prefabs/goatmilk.lua`
 - `dst-scripts/prefabs/goldnugget.lua`
+- `dst-scripts/prefabs/golfclub_reticule.lua`
 - `dst-scripts/prefabs/goose_feather.lua`
 - `dst-scripts/prefabs/goosplash.lua`
 - `dst-scripts/prefabs/grass.lua`
@@ -2935,6 +2950,7 @@ git ls-files --recurse-submodules dst-scripts
 - `dst-scripts/prefabs/torchfire.lua`
 - `dst-scripts/prefabs/torchfire_barber.lua`
 - `dst-scripts/prefabs/torchfire_carrat.lua`
+- `dst-scripts/prefabs/torchfire_cawnival.lua`
 - `dst-scripts/prefabs/torchfire_common.lua`
 - `dst-scripts/prefabs/torchfire_nautical.lua`
 - `dst-scripts/prefabs/torchfire_pillar.lua`
@@ -2981,6 +2997,7 @@ git ls-files --recurse-submodules dst-scripts
 - `dst-scripts/prefabs/vault_decon_switch.lua`
 - `dst-scripts/prefabs/vault_furniture.lua`
 - `dst-scripts/prefabs/vault_ground_pattern.lua`
+- `dst-scripts/prefabs/vault_invalidtile.lua`
 - `dst-scripts/prefabs/vault_key.lua`
 - `dst-scripts/prefabs/vault_key_activator.lua`
 - `dst-scripts/prefabs/vault_key_trial.lua`

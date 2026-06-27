@@ -1,6 +1,12 @@
 # `0x10020000` 源码快照
 
-当前跟踪的 `dst-scripts` 文件为 4028 个，其中 Lua 文件为 4013 个。
+当前跟踪的 `dst-scripts` 文件为 4045 个，其中 Lua 文件为 4030 个。
+
+当前子模块快照为 `f731c442`，对应上游提交信息 `739495`。
+
+上一轮文档统计对应 `281c027b`，对应上游提交信息 `736959`。
+
+本轮净增 17 个 Lua 文件，其中 `dst-scripts/components/` 净增 6 个，`dst-scripts/prefabs/` 净增 11 个。
 
 ## `0x10021111` 本页定位 / 要回答的运行时问题 / 源码阅读目标 / 验证点
 
@@ -44,8 +50,8 @@ flowchart TD
 | 范围 | Lua 文件数 | 阅读含义 |
 | --- | ---: | --- |
 | `dst-scripts/` 根层 | 218 | 启动、全局服务和数据入口 |
-| `dst-scripts/prefabs/` | 1583 | 实体装配最大区 |
-| `dst-scripts/components/` | 815 | server 侧行为状态主区 |
+| `dst-scripts/prefabs/` | 1594 | 实体装配最大区 |
+| `dst-scripts/components/` | 821 | server 侧行为状态主区 |
 | `dst-scripts/stategraphs/` | 261 | 动作表现与动画状态机 |
 | `dst-scripts/brains/` | 191 | AI 决策入口 |
 | `dst-scripts/behaviours/` | 29 | behaviour tree 节点 |

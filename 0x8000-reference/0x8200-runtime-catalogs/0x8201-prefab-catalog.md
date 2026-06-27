@@ -1,6 +1,6 @@
 # `0x82010000` Prefab 目录
 
-Prefab 目录收录 1583 个 Lua 文件。
+Prefab 目录收录 1594 个 Lua 文件。
 
 ## `0x82011111` Prefab 文件 / 清单入口 / 机器可读块 / 验证点
 
@@ -220,6 +220,7 @@ Prefab 目录收录 1583 个 Lua 文件。
 - `dst-scripts/prefabs/carnival_decor.lua`
 - `dst-scripts/prefabs/carnival_food.lua`
 - `dst-scripts/prefabs/carnival_gametoken.lua`
+- `dst-scripts/prefabs/carnival_golfclub.lua`
 - `dst-scripts/prefabs/carnival_host.lua`
 - `dst-scripts/prefabs/carnival_plaza.lua`
 - `dst-scripts/prefabs/carnival_prizebooth.lua`
@@ -231,6 +232,13 @@ Prefab 目录收录 1583 个 Lua 文件。
 - `dst-scripts/prefabs/carnivaldecor_lamp.lua`
 - `dst-scripts/prefabs/carnivalgame_common.lua`
 - `dst-scripts/prefabs/carnivalgame_feedchicks.lua`
+- `dst-scripts/prefabs/carnivalgame_golf_hole.lua`
+- `dst-scripts/prefabs/carnivalgame_golf_meshdata.lua`
+- `dst-scripts/prefabs/carnivalgame_golf_shape.lua`
+- `dst-scripts/prefabs/carnivalgame_golf_tee.lua`
+- `dst-scripts/prefabs/carnivalgame_golfball.lua`
+- `dst-scripts/prefabs/carnivalgame_golfgame.lua`
+- `dst-scripts/prefabs/carnivalgame_golfprops.lua`
 - `dst-scripts/prefabs/carnivalgame_herding.lua`
 - `dst-scripts/prefabs/carnivalgame_memory.lua`
 - `dst-scripts/prefabs/carnivalgame_placementblocker.lua`
@@ -511,6 +519,7 @@ Prefab 目录收录 1583 个 Lua 文件。
 - `dst-scripts/prefabs/gnarwail_horn.lua`
 - `dst-scripts/prefabs/goatmilk.lua`
 - `dst-scripts/prefabs/goldnugget.lua`
+- `dst-scripts/prefabs/golfclub_reticule.lua`
 - `dst-scripts/prefabs/goose_feather.lua`
 - `dst-scripts/prefabs/goosplash.lua`
 - `dst-scripts/prefabs/grass.lua`
@@ -1308,6 +1317,7 @@ Prefab 目录收录 1583 个 Lua 文件。
 - `dst-scripts/prefabs/torchfire.lua`
 - `dst-scripts/prefabs/torchfire_barber.lua`
 - `dst-scripts/prefabs/torchfire_carrat.lua`
+- `dst-scripts/prefabs/torchfire_cawnival.lua`
 - `dst-scripts/prefabs/torchfire_common.lua`
 - `dst-scripts/prefabs/torchfire_nautical.lua`
 - `dst-scripts/prefabs/torchfire_pillar.lua`
@@ -1354,6 +1364,7 @@ Prefab 目录收录 1583 个 Lua 文件。
 - `dst-scripts/prefabs/vault_decon_switch.lua`
 - `dst-scripts/prefabs/vault_furniture.lua`
 - `dst-scripts/prefabs/vault_ground_pattern.lua`
+- `dst-scripts/prefabs/vault_invalidtile.lua`
 - `dst-scripts/prefabs/vault_key.lua`
 - `dst-scripts/prefabs/vault_key_activator.lua`
 - `dst-scripts/prefabs/vault_key_trial.lua`

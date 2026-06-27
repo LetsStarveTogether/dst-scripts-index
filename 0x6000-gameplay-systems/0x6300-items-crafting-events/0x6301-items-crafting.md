@@ -110,11 +110,22 @@ flowchart TD
 这些 recipe 的产物再进入 `dst-scripts/prefabs/boat.lua`、`dst-scripts/prefabs/anchor.lua`
 或 `dst-scripts/prefabs/mast.lua` 的 prefab 装配。
 
+## `0x63014411` 结构细节 / 活动高尔夫配方交界 / `carnivalgame_golfgame_kit_*` / 搜索信号
+
+Carnival 高尔夫先用 `carnivalgame_golfgame_kit_easy`、`carnivalgame_golfgame_kit_medium`、
+`carnivalgame_golfgame_kit_hard` 和 `carnivalgame_golfgame_kit_diy` 生成球场套件。
+场内道具配方使用 `TECH.CARNIVAL_GOLFPROPS_ONE`，并通过当前 prototyper 判断是否处在 `carnivalgame_golfgame` 内。
+这些道具配方通常没有普通材料，关键约束在 `testfn` 和 `overridecandeployrecipeatpointfn`。
+因此排查高尔夫道具能否放置时，要先读 `recipes.lua` 的 `IsGolfPropWithinGolfArea`，再读 `carnivalgame_golfgame.lua` 的区域边界。
+
 ## `0x63015100` 阅读与验证路线 / 从哪里开始读源码
 
 ~~~bash
 rg -n "Recipe2|AllRecipes|GetValidRecipe|require_special_event" \
   dst-scripts/recipe.lua \
+  dst-scripts/recipes.lua
+
+rg -n "carnivalgame_golfgame_kit|CARNIVAL_GOLFPROPS_ONE|IsGolfPropWithinGolfArea" \
   dst-scripts/recipes.lua
 
 rg -n "MakeRecipeFromMenu|MakeRecipeAtPoint|BufferBuild|RemoteMakeRecipe" \
@@ -132,5 +143,6 @@ rg -n "MakeRecipe|DoBuild|ACTIONS.BUILD|GiveItem|SpawnPrefab" \
 
 先读 `dst-scripts/recipe.lua` 的 `Recipe2` 和 `GetValidRecipe`。
 再读 `dst-scripts/recipes.lua` 中一个简单 `Recipe2` 条目。
+如果抽样活动配方，可以读 `carnivalgame_golfgame_kit_easy`，再读 `TECH.CARNIVAL_GOLFPROPS_ONE` 下面的高尔夫道具配方。
 然后顺着 `builder_replica` 到 `networkclientrpc` 的 `rpc_id` 查找。
 最后读 `Builder:DoBuild`，确认产物到底进入背包、装备栏、世界坐标还是 crafting station 自己处理。
