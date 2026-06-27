@@ -6,13 +6,7 @@
 
 具体源码事实放入独立专题页。
 
-## `0x51001000` 目录职责
-
-### `0x51001100` 文档边界
-
-#### `0x51001110` 本目录覆盖什么
-
-##### `0x51001111` 验证点
+## `0x51001111` 目录职责 / 文档边界 / 本目录覆盖什么 / 验证点
 
 本目录覆盖 `dst-scripts/worldgen_main.lua`、`dst-scripts/map/*`、`dst-scripts/tiledefs.lua`、
 `dst-scripts/worldtiledefs.lua`、`dst-scripts/tilemanager.lua` 和 `dst-scripts/tilegroups.lua`
@@ -22,24 +16,14 @@
 
 这些内容分别进入 `0x5200-world-state`、`0x6000-gameplay-systems` 或 `0x8000-reference`。
 
-## `0x51002000` 子页面索引
-
-### `0x51002100` 推荐顺序
-
-#### `0x51002110` 从入口到输出
-
-##### `0x51002111` 链接校验
+## `0x51002111` 子页面索引 / 推荐顺序 / 从入口到输出 / 链接校验
 
 - [Worldgen Main](0x5101-worldgen-main.md)
 - [Levels Tasks Rooms](0x5102-levels-tasks-rooms.md)
 - [Layouts](0x5103-layouts.md)
 - [Forest Map Output](0x5104-forest-map-output.md)
 
-### `0x51002200` 页面分工
-
-#### `0x51002210` 不重复写同一事实
-
-##### `0x51002211` 验证点
+## `0x51002211` 子页面索引 / 页面分工 / 不重复写同一事实 / 验证点
 
 `0x5101` 只回答入口、重试、参数、DLC、存档校验和 world entity 注入。
 
@@ -49,13 +33,7 @@
 
 `0x5104` 只回答 `forest_map.Generate` 如何把拓扑烘焙成 tile map、实体表、海洋、道路和季节初始数据。
 
-## `0x51003000` 阅读入口
-
-### `0x51003100` 最小路径
-
-#### `0x51003110` 先定位再展开
-
-##### `0x51003111` 抽样动作
+## `0x51003111` 阅读入口 / 最小路径 / 先定位再展开 / 抽样动作
 
 优先从 `0x5101-worldgen-main.md` 建立 `GEN_PARAMETERS -> GenerateNew -> forest_map.Generate` 主链路。
 

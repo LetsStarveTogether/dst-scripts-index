@@ -2,13 +2,7 @@
 
 Component 目录收录 815 个 Lua 文件。
 
-## `0x82021000` Component 文件
-
-### `0x82021100` 清单入口
-
-#### `0x82021110` 机器可读块
-
-##### `0x82021111` 验证点
+## `0x82021111` Component 文件 / 清单入口 / 机器可读块 / 验证点
 
 component 模块、client/control 辅助组件、visual helper 和 `_replica` 投影文件在同一清单中保留原始路径。
 

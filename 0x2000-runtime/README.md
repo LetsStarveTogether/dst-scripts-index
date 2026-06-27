@@ -5,13 +5,7 @@
 
 目录级语义由本 README 承载，独立专题文件只解释具体运行链路。
 
-## `0x20001000` 区域定位
-
-### `0x20001100` 阅读问题
-
-#### `0x20001110` 运行时边界
-
-##### `0x20001111` 验证点
+## `0x20001111` 区域定位 / 阅读问题 / 运行时边界 / 验证点
 
 本区解释 Lua 侧能看到的入口、回调和调度表。
 不要把引擎回调写成 Lua 文件之间的直接调用。
@@ -30,11 +24,7 @@
 | `dst-scripts/scheduler.lua` | `RunScheduler` | 普通 coroutine 与定时回调调度入口 |
 | `dst-scripts/scheduler.lua` | `RunStaticScheduler` | 静态 scheduler 调度入口 |
 
-### `0x20002100` 入口选择
-
-#### `0x20002110` `dst-scripts/main.lua`
-
-##### `0x20002111` 搜索信号
+### `0x20002111` 入口选择 / `dst-scripts/main.lua` / 搜索信号
 
 用 `ModSafeStartup` 读顶层启动副作用。
 用 `Start` 读引擎进入前端和 `gamelogic.lua` 的阶段。
@@ -59,23 +49,13 @@ flowchart TD
     L --> M["scheduler, components, SGManager, BrainManager"]
 ~~~
 
-### `0x20003100` 导航原则
-
-#### `0x20003110` 两条主线
-
-##### `0x20003111` 边界条件
+### `0x20003111` 导航原则 / 两条主线 / 边界条件
 
 `GlobalInit` 由 `ModSafeStartup` 在 `RUN_GLOBAL_INIT` 下调用。
 `Start` 不调用 `GlobalInit`，它创建前端并加载 `gamelogic.lua`。
 `RunScheduler` 不调用 `SGManager:Update` 或 `BrainManager:Update`，它们同在 `Update` 中由 tick 循环分段调用。
 
-## `0x20004000` 目录索引
-
-### `0x20004100` README 载体
-
-#### `0x20004110` 二级目录
-
-##### `0x20004111` 链接校验
+## `0x20004111` 目录索引 / README 载体 / 二级目录 / 链接校验
 
 以下入口先进入目录 README，再进入具体专题文件。
 
@@ -91,9 +71,7 @@ flowchart TD
 - [模组与调试](0x2300-tooling/0x2301-mods-debug.md)
 - [平台工具](0x2300-tooling/0x2302-platform-tools.md)
 
-## `0x20005000` 阅读与验证路线
-
-### `0x20005100` 从哪里开始读源码
+## `0x20005100` 阅读与验证路线 / 从哪里开始读源码
 
 ~~~bash
 rg -n "ModSafeStartup|function Start|function GlobalInit|local function DoResetAction|function Update|RunScheduler" \
@@ -104,9 +82,7 @@ rg -n "ModSafeStartup|function Start|function GlobalInit|local function DoResetA
   dst-scripts/scheduler.lua
 ~~~
 
-#### `0x20005110` 最小闭环
-
-##### `0x20005111` 抽样动作
+### `0x20005111` 最小闭环 / 抽样动作
 
 先确认 `main.lua` 顶层 require 与 `ModSafeStartup` 的副作用。
 再确认 `Start()` 加载 `gamelogic.lua` 后，底部 Profile 和索引回调如何进入 `DoResetAction()`。

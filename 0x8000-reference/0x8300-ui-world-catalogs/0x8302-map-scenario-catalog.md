@@ -6,13 +6,7 @@ Map 目录收录 444 个 Lua 文件。
 
 Scenario 目录收录 50 个 Lua 文件。
 
-## `0x83021000` Map 文件
-
-### `0x83021100` 清单入口
-
-#### `0x83021110` 机器可读块
-
-##### `0x83021111` 验证点
+## `0x83021111` Map 文件 / 清单入口 / 机器可读块 / 验证点
 
 - `dst-scripts/map/archive_worldgen.lua`
 - `dst-scripts/map/blockersets.lua`
@@ -459,13 +453,7 @@ Scenario 目录收录 50 个 Lua 文件。
 - `dst-scripts/map/traps.lua`
 - `dst-scripts/map/waterlog_worldgen.lua`
 
-## `0x83022000` Scenario 文件
-
-### `0x83022100` 清单入口
-
-#### `0x83022110` 机器可读块
-
-##### `0x83022111` 验证点
+## `0x83022111` Scenario 文件 / 清单入口 / 机器可读块 / 验证点
 
 - `dst-scripts/scenarios/archive_cookpot.lua`
 - `dst-scripts/scenarios/camera_maxwellthrone.lua`

@@ -4,13 +4,7 @@
 
 它是 `0x5101` 入口页和 `0x5103` layout 页之间的输出层。
 
-## `0x51041000` 本页定位
-
-### `0x51041100` 要回答的运行时问题
-
-#### `0x51041110` `forest_map.Generate` 到底产出什么
-
-##### `0x51041111` 验证点
+## `0x51041111` 本页定位 / 要回答的运行时问题 / `forest_map.Generate` 到底产出什么 / 验证点
 
 `forest_map.Generate` 返回的是 `save` table。
 
@@ -20,7 +14,7 @@
 
 `save.world_network.persistdata` 会写入起始季节与天气相关组件数据。
 
-##### `0x51041112` 边界条件
+## `0x51041112` 本页定位 / 要回答的运行时问题 / `forest_map.Generate` 到底产出什么 / 边界条件
 
 `forest_map.Generate` 不负责把实体 Spawn 到运行时世界。
 
@@ -67,11 +61,7 @@ flowchart TD
     N --> O["return save"]
 ~~~
 
-### `0x51043100` 参数规整阶段
-
-#### `0x51043110` `current_gen_params`
-
-##### `0x51043111` 输入来源
+### `0x51043111` 参数规整阶段 / `current_gen_params` / 输入来源
 
 `Generate` 断言 `level.overrides` 存在。
 
@@ -79,7 +69,7 @@ flowchart TD
 
 然后把 `start_location`、`islands`、`branching`、`loop`、`layout_mode`、`has_ocean`、`world_size` 等字段转换进 `story_gen_params`。
 
-##### `0x51043112` 生成尺寸
+### `0x51043112` 参数规整阶段 / `current_gen_params` / 生成尺寸
 
 `world_size` 会被转换成 `min_size`。
 
@@ -89,17 +79,13 @@ flowchart TD
 
 最终 `map_width` 和 `map_height` 都被设置为 `min_size`。
 
-### `0x51043200` Story 与 WorldSim 阶段
-
-#### `0x51043210` `BuildStory`
-
-##### `0x51043211` 返回值
+### `0x51043211` Story 与 WorldSim 阶段 / `BuildStory` / 返回值
 
 `BuildStory(tasks, story_gen_params, level)` 返回 `topology_save` 和 `storygen`。
 
 `topology_save.root` 是后续 `SaveEncode`、`ConvertGround`、`PopulateVoronoi` 和 required prefab 汇总的入口。
 
-##### `0x51043212` WorldSim 提交
+### `0x51043212` Story 与 WorldSim 阶段 / `BuildStory` / WorldSim 提交
 
 `WorldSim:WorldGen_InitializeNodePoints()` 先初始化节点点位。
 
@@ -111,11 +97,7 @@ flowchart TD
 
 `GenerateNew` 会在外层捕获 nil 并最多重试 5 次。
 
-### `0x51043300` 地形与拓扑编码
-
-#### `0x51043310` Topology Save
-
-##### `0x51043311` 编码字段
+### `0x51043311` 地形与拓扑编码 / Topology Save / 编码字段
 
 `topology_save.root:SaveEncode({width=map_width, height=map_height}, save.map.topology)` 写出 topology。
 
@@ -123,7 +105,7 @@ flowchart TD
 
 `WorldSim:GetEncodedMap(join_islands)` 写出 `tiles`、`tiledata`、`nav`、`adj` 和 `nodeidtilemap`。
 
-##### `0x51043312` Tile 注册依赖
+### `0x51043312` 地形与拓扑编码 / Topology Save / Tile 注册依赖
 
 `save.map.world_tile_map = GetWorldTileMap()` 依赖 tile 注册结果。
 
@@ -135,11 +117,7 @@ flowchart TD
 
 `tilegroups.lua` 提供 `IsLandTile`、`IsOceanTile`、`IsImpassableTile`、`IsNoiseTile` 和 `IsShallowOceanTile` 等判断。
 
-### `0x51043400` 实体填充阶段
-
-#### `0x51043410` Static Layout
-
-##### `0x51043411` 执行路径
+### `0x51043411` 实体填充阶段 / Static Layout / 执行路径
 
 `topology_save.root:GlobalPrePopulate` 先执行全局预填充。
 
@@ -149,9 +127,7 @@ flowchart TD
 
 这些 layout 最终通过 `object_layout.Convert` 写入 `entities`。
 
-#### `0x51043420` Density Prefab
-
-##### `0x51043421` 执行路径
+### `0x51043421` 实体填充阶段 / Density Prefab / 执行路径
 
 `TranslateWorldGenChoices(current_gen_params)` 会把部分 override 转成 `translated_prefabs`。
 
@@ -161,9 +137,7 @@ flowchart TD
 
 如果 `translated_prefabs` 中某个 prefab 的倍率小于 `1`，后续还会裁剪已生成实体。
 
-#### `0x51043430` Ocean Pass
-
-##### `0x51043431` 执行路径
+### `0x51043431` 实体填充阶段 / Ocean Pass / 执行路径
 
 `story_gen_params.has_ocean` 为真时才进入海洋流程。
 
@@ -172,9 +146,7 @@ flowchart TD
 
 `storygen.ocean_population` 来自 `Story:ProcessOceanContent`。
 
-#### `0x51043440` 后处理 Pass
-
-##### `0x51043441` 执行路径
+### `0x51043441` 实体填充阶段 / 后处理 Pass / 执行路径
 
 `BunchSpawnerInit` 和 `BunchSpawnerRun` 在主要实体填充后运行。
 
@@ -184,11 +156,7 @@ flowchart TD
 
 `forest_map.Generate` 还会移除落在 impassable visual tile 上的实体。
 
-### `0x51043500` 校验与最终字段
-
-#### `0x51043510` Required Prefabs
-
-##### `0x51043511` 校验来源
+### `0x51043511` 校验与最终字段 / Required Prefabs / 校验来源
 
 required prefab 校验来自三个来源。
 
@@ -202,9 +170,7 @@ required prefab 校验来自三个来源。
 
 否则缺失会让 `Generate` 返回 nil。
 
-#### `0x51043520` Start Location
-
-##### `0x51043521` 校验方式
+### `0x51043521` 校验与最终字段 / Start Location / 校验方式
 
 `save.ents` 必须至少包含 `spawnpoint_multiplayer`、`multiplayer_portal`、`quagmire_portal` 或
 `lavaarena_portal` 中的一类。
@@ -213,9 +179,7 @@ required prefab 校验来自三个来源。
 
 在非跳过校验时它会返回 nil。
 
-#### `0x51043530` Season 与 Roads
-
-##### `0x51043531` 写入位置
+### `0x51043531` 校验与最终字段 / Season 与 Roads / 写入位置
 
 `season_start` 会被解析为起始季节。
 
@@ -227,9 +191,7 @@ required prefab 校验来自三个来源。
 
 它写入 `save.map.roads`。
 
-## `0x51044000` 阅读与验证路线
-
-### `0x51044100` 从哪里开始读源码
+## `0x51044100` 阅读与验证路线 / 从哪里开始读源码
 
 ~~~bash
 rg -n "local function Generate|BuildStory|WorldGen_Commit|ConvertGround|PopulateVoronoi" \
@@ -244,9 +206,7 @@ rg -n "TileManager\\.AddTile|RegisterTileRange|GetTileInfo|IsLandTile|IsOceanTil
   dst-scripts/tilegroups.lua
 ~~~
 
-#### `0x51044110` 人工核对清单
-
-##### `0x51044111` 最小闭环
+### `0x51044111` 人工核对清单 / 最小闭环
 
 - `Generate` 是否从 `level.overrides` 派生 `story_gen_params`。
 - `BuildStory` 是否早于 `WorldGen_Commit`。

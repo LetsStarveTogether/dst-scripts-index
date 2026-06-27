@@ -8,13 +8,7 @@ Brain 目录收录 191 个 Lua 文件。
 
 Behaviour 目录收录 29 个 Lua 文件。
 
-## `0x82031000` StateGraph 文件
-
-### `0x82031100` 清单入口
-
-#### `0x82031110` 机器可读块
-
-##### `0x82031111` 验证点
+## `0x82031111` StateGraph 文件 / 清单入口 / 机器可读块 / 验证点
 
 StateGraph 目录收录 261 个 Lua 文件。
 
@@ -280,13 +274,7 @@ StateGraph 目录收录 261 个 Lua 文件。
 - `dst-scripts/stategraphs/SGyotb_stage.lua`
 - `dst-scripts/stategraphs/commonstates.lua`
 
-## `0x82032000` Brain 文件
-
-### `0x82032100` 清单入口
-
-#### `0x82032110` 机器可读块
-
-##### `0x82032111` 验证点
+## `0x82032111` Brain 文件 / 清单入口 / 机器可读块 / 验证点
 
 Brain 目录收录 191 个 Lua 文件。
 
@@ -482,13 +470,7 @@ Brain 目录收录 191 个 Lua 文件。
 - `dst-scripts/brains/wx78_shadowdrone_debufferbrain.lua`
 - `dst-scripts/brains/wx78_shadowdrone_harvesterbrain.lua`
 
-## `0x82033000` Behaviour 文件
-
-### `0x82033100` 清单入口
-
-#### `0x82033110` 机器可读块
-
-##### `0x82033111` 验证点
+## `0x82033111` Behaviour 文件 / 清单入口 / 机器可读块 / 验证点
 
 Behaviour 目录收录 29 个 Lua 文件。
 

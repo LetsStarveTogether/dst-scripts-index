@@ -8,13 +8,7 @@ Replica 与 Classified 页解释 server component 如何投影只读状态、预
 
 classified 则是 `dst-scripts/prefabs/*_classified.lua` 下的一组隐藏网络 prefab。
 
-## `0x33021000` 本页定位
-
-### `0x33021100` 要回答的运行时问题
-
-#### `0x33021110` Component 如何获得 Replica
-
-##### `0x33021111` 验证点
+## `0x33021111` 本页定位 / 要回答的运行时问题 / Component 如何获得 Replica / 验证点
 
 `EntityScript:AddComponent(name)` 先加载 server component 模块。
 
@@ -28,9 +22,7 @@ server 和 client 都可能拥有 replica 对象。
 
 因此 replica 不是纯客户端对象。
 
-#### `0x33021120` 标签如何驱动客户端重建
-
-##### `0x33021121` 验证点
+## `0x33021121` 本页定位 / 要回答的运行时问题 / 标签如何驱动客户端重建 / 验证点
 
 master sim 上的 `ReplicateComponent` 会给实体加 `_"..name` 标签。
 
@@ -40,9 +32,7 @@ client 初始反序列化标签后，`EntityScript:ReplicateEntity()` 会扫描 
 
 `ValidateReplicaComponent(name, cmp)` 也依赖 `_name` 标签过滤可见 replica。
 
-#### `0x33021130` Classified 在哪里介入
-
-##### `0x33021131` 验证点
+## `0x33021131` 本页定位 / 要回答的运行时问题 / Classified 在哪里介入 / 验证点
 
 classified 是隐藏网络 prefab。
 
@@ -70,11 +60,7 @@ classified 不是所有 replica 的必经层。
 | `dst-scripts/prefabs/player_classified.lua` | `OnEntityReplicated` | 玩家私有状态总线和 replica 批量绑定 |
 | `dst-scripts/prefabs/inventory_classified.lua` | `OnEntityReplicated` | inventory replica 的大型私有状态表 |
 
-### `0x33022100` Replica 锚点
-
-#### `0x33022110` `dst-scripts/entityreplica.lua`
-
-##### `0x33022111` 搜索信号
+### `0x33022111` Replica 锚点 / `dst-scripts/entityreplica.lua` / 搜索信号
 
 `REPLICATABLE_COMPONENTS` 当前包含 19 个组件。
 
@@ -90,9 +76,7 @@ classified 不是所有 replica 的必经层。
 
 `AddReplicableComponent(name)` 允许 mod 把额外组件加入同一集合。
 
-#### `0x33022120` `_name` 与 `__name`
-
-##### `0x33022121` 搜索信号
+### `0x33022121` Replica 锚点 / `_name` 与 `__name` / 搜索信号
 
 `ReplicateComponent` 在 master sim 添加 `_name` 标签。
 
@@ -106,11 +90,7 @@ classified 不是所有 replica 的必经层。
 
 玩家 prefab 就利用手工 `_health`、`_hunger`、`_sanity` 等标签提前暴露 replica 形状。
 
-### `0x33022200` Classified 锚点
-
-#### `0x33022210` 绑定协议
-
-##### `0x33022211` 搜索信号
+### `0x33022211` Classified 锚点 / 绑定协议 / 搜索信号
 
 常见 classified prefab 会保存 `_parent`。
 
@@ -122,9 +102,7 @@ client 侧 `OnEntityReplicated` 会调用父实体的 `TryAttachClassifiedToRepl
 
 这个双向兜底解释了为什么绑定不要求严格的构造顺序。
 
-#### `0x33022220` 可见性协议
-
-##### `0x33022221` 搜索信号
+### `0x33022221` Classified 锚点 / 可见性协议 / 搜索信号
 
 `Network:SetClassifiedTarget(target)` 决定 classified 的目标可见性。
 
@@ -154,11 +132,7 @@ flowchart TD
     M --> N["replica 读取 classified 字段"]
 ~~~
 
-### `0x33023100` 普通 Replica 路径
-
-#### `0x33023110` Server 上也有 Replica
-
-##### `0x33023111` 边界条件
+### `0x33023111` 普通 Replica 路径 / Server 上也有 Replica / 边界条件
 
 `AddComponent` 在构造 server component 前复制组件。
 
@@ -170,9 +144,7 @@ flowchart TD
 
 这类写法不是 client-only API。
 
-#### `0x33023120` Replica 可以没有 Classified
-
-##### `0x33023121` 边界条件
+### `0x33023121` 普通 Replica 路径 / Replica 可以没有 Classified / 边界条件
 
 部分 `_replica.lua` 文件直接声明 netvars。
 
@@ -184,11 +156,7 @@ flowchart TD
 
 没有 classified 不代表没有 replica。
 
-### `0x33023200` Classified 路径
-
-#### `0x33023210` `player_classified`
-
-##### `0x33023211` 边界条件
+### `0x33023211` Classified 路径 / `player_classified` / 边界条件
 
 `player_classified` 添加 `Transform`、`MapExplorer`、`Network` 和 `CLASSIFIED` 标签。
 
@@ -200,9 +168,7 @@ flowchart TD
 
 玩家相关 server component 也会直接写 `inst.player_classified` 字段。
 
-#### `0x33023220` Inventory 与 Container
-
-##### `0x33023221` 边界条件
+### `0x33023221` Classified 路径 / Inventory 与 Container / 边界条件
 
 `inventory_classified` 和 `container_classified` 是大型槽位状态表。
 
@@ -212,9 +178,7 @@ flowchart TD
 
 两者都通过 classified 把高频槽位状态投影到可见客户端。
 
-#### `0x33023230` Item 与 Construction
-
-##### `0x33023231` 边界条件
+### `0x33023231` Classified 路径 / Item 与 Construction / 边界条件
 
 `inventoryitem_replica.lua` 会生成 `inventoryitem_classified`。
 
@@ -226,13 +190,7 @@ flowchart TD
 
 `writeable_replica.lua` 会生成 `writeable_classified`，但该 classified 本身没有 netvar 字段。
 
-## `0x33024000` Classified 谱系
-
-### `0x33024100` 当前完整列表
-
-#### `0x33024110` `dst-scripts/prefabs/*_classified.lua`
-
-##### `0x33024111` 覆盖清单
+## `0x33024111` Classified 谱系 / 当前完整列表 / `dst-scripts/prefabs/*_classified.lua` / 覆盖清单
 
 当前有 15 个 `*_classified.lua` 文件。
 
@@ -256,11 +214,7 @@ flowchart TD
 | `dst-scripts/prefabs/voidcloth_scythe_classified.lua` | voidcloth scythe 私有说话状态 |
 | `dst-scripts/prefabs/wagpunkhat_classified.lua` | wagpunk hat 私有说话状态 |
 
-### `0x33024200` 不同模式
-
-#### `0x33024210` 大型状态表
-
-##### `0x33024211` 验证点
+## `0x33024211` Classified 谱系 / 不同模式 / 大型状态表 / 验证点
 
 `player_classified`、`inventory_classified` 和 `container_classified` 是大型状态表。
 
@@ -268,9 +222,7 @@ flowchart TD
 
 文档应把它们当作状态总线，而不是普通 FX prefab。
 
-#### `0x33024220` 组件附属状态
-
-##### `0x33024221` 验证点
+## `0x33024221` Classified 谱系 / 不同模式 / 组件附属状态 / 验证点
 
 `inventoryitem_classified`、`constructionsite_classified` 和 `writeable_classified` 由对应 replica 管理。
 
@@ -278,9 +230,7 @@ flowchart TD
 
 client 侧可能先收到 classified，再等 replica 构造时重新 attach。
 
-#### `0x33024230` 专用私有状态
-
-##### `0x33024231` 验证点
+## `0x33024231` Classified 谱系 / 不同模式 / 专用私有状态 / 验证点
 
 `pet_hunger_classified`、`woby_commands_classified`、`wx78_classified` 和武器说话 classified 都是专用状态。
 
@@ -288,13 +238,7 @@ client 侧可能先收到 classified，再等 replica 构造时重新 attach。
 
 阅读时应回到对应 prefab 或 component 的生成点。
 
-## `0x33025000` Netvars 与事件
-
-### `0x33025100` `dst-scripts/netvars.lua`
-
-#### `0x33025110` 类型口径
-
-##### `0x33025111` 验证点
+## `0x33025111` Netvars 与事件 / `dst-scripts/netvars.lua` / 类型口径 / 验证点
 
 `netvars.lua` 注释列出 `net_bool`、`net_byte`、`net_shortint`、`net_ushortint`、`net_float` 和 `net_hash` 等类型。
 
@@ -304,11 +248,7 @@ client 侧可能先收到 classified，再等 replica 构造时重新 attach。
 
 `GetIdealUnsignedNetVarForCount` 会按最大数量选择合适的 unsigned netvar 类型。
 
-### `0x33025200` `net_event`
-
-#### `0x33025210` 事件脉冲
-
-##### `0x33025211` 验证点
+## `0x33025211` Netvars 与事件 / `net_event` / 事件脉冲 / 验证点
 
 `net_event` 是 `net_bool` 的包装。
 
@@ -318,13 +258,7 @@ client 侧可能先收到 classified，再等 replica 构造时重新 attach。
 
 因此 `buildevent`、`attackedpulseevent`、`learnrecipeevent` 这类字段应解释为事件脉冲。
 
-## `0x33026000` 覆盖口径
-
-### `0x33026100` 完整覆盖在哪里
-
-#### `0x33026110` Reference 清单
-
-##### `0x33026111` 边界条件
+## `0x33026111` 覆盖口径 / 完整覆盖在哪里 / Reference 清单 / 边界条件
 
 `components/*_replica.lua` 的完整路径由 `0x8202-component-catalog.md` 覆盖。
 
@@ -332,11 +266,7 @@ client 侧可能先收到 classified，再等 replica 构造时重新 attach。
 
 本页只维护 19 个内建 replica 名称和 15 个 classified 文件的概念清单。
 
-### `0x33026200` 不应写入的结论
-
-#### `0x33026210` 常见误读
-
-##### `0x33026211` 验证点
+## `0x33026211` 覆盖口径 / 不应写入的结论 / 常见误读 / 验证点
 
 不要写 dst-scripts/replica，因为源码没有这个目录。
 
@@ -348,9 +278,7 @@ client 侧可能先收到 classified，再等 replica 构造时重新 attach。
 
 不要把 `net_event` 当作普通布尔状态。
 
-## `0x33027000` 阅读与验证路线
-
-### `0x33027100` 从哪里开始读源码
+## `0x33027100` 阅读与验证路线 / 从哪里开始读源码
 
 ~~~bash
 rg -n "function EntityScript:AddComponent|ReplicateComponent|ReplicateEntity|TryAttachClassified" \
@@ -366,9 +294,7 @@ rg -n "AttachClassified|OnEntityReplicated|net_|SetClassifiedTarget|TryAttachCla
   dst-scripts/prefabs/container_classified.lua
 ~~~
 
-#### `0x33027110` 推荐顺序
-
-##### `0x33027111` 最小闭环
+### `0x33027111` 推荐顺序 / 最小闭环
 
 先读 `EntityScript:AddComponent`，确认复制发生在 server component 构造前。
 

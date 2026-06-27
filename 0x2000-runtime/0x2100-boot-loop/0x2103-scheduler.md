@@ -4,13 +4,7 @@
 `EntityScript:DoTaskInTime()` 与 `DoPeriodicTask()` 进入 `attime` 定时回调表。
 `StartThread()` 进入 coroutine task 表，并在 `Scheduler:Run()` 中 resume。
 
-## `0x21031000` 本页定位
-
-### `0x21031100` 要回答的运行时问题
-
-#### `0x21031110` 源码阅读目标
-
-##### `0x21031111` 验证点
+## `0x21031111` 本页定位 / 要回答的运行时问题 / 源码阅读目标 / 验证点
 
 目标是把定时回调和 coroutine 休眠分开。
 `ExecuteInTime()` 不会创建 coroutine。
@@ -34,11 +28,7 @@
 | `dst-scripts/update.lua` | `Update` | 调用 `RunScheduler(i)` 的主循环位置 |
 | `dst-scripts/update.lua` | `StaticUpdate` | 调用 `RunStaticScheduler(i)` 的主循环位置 |
 
-### `0x21032100` 主锚点
-
-#### `0x21032110` `dst-scripts/entityscript.lua`
-
-##### `0x21032111` 搜索信号
+### `0x21032111` 主锚点 / `dst-scripts/entityscript.lua` / 搜索信号
 
 先搜索 `DoTaskInTime`，确认普通实体任务写入 `scheduler`。
 再搜索 `DoStaticTaskInTime`，确认静态实体任务写入 `staticScheduler`。
@@ -64,55 +54,37 @@ flowchart TD
     Q["StaticUpdate"] --> R["RunStaticScheduler(i)"]
 ~~~
 
-### `0x21033100` 流程分段
-
-#### `0x21033110` 定时回调路径
-
-##### `0x21033111` 边界条件
+### `0x21033111` 流程分段 / 定时回调路径 / 边界条件
 
 `DoTaskInTime()` 和 `DoPeriodicTask()` 返回 `Periodic` 对象，并记录在 `inst.pendingtasks`。
 到期时 `Scheduler:OnTick()` 直接调用 `k.fn(...)`。
 这条路径不经过 `Scheduler:Run()`。
 
-#### `0x21033120` Coroutine Task 路径
-
-##### `0x21033121` 边界条件
+### `0x21033121` 流程分段 / Coroutine Task 路径 / 边界条件
 
 `StartThread()` 和 `StartStaticThread()` 用 `Scheduler:AddTask()` 创建 `Task` 和 coroutine。
 `Scheduler:Run()` resume `running` 表中的 coroutine。
 如果 coroutine `Sleep(time)`，它会 yield `SLEEP` 和目标 tick，并被放入 `waitingfortick`。
 
-#### `0x21033130` 普通 Scheduler 与静态 Scheduler
-
-##### `0x21033131` 边界条件
+### `0x21033131` 流程分段 / 普通 Scheduler 与静态 Scheduler / 边界条件
 
 `scheduler = Scheduler()` 使用 `GetTick()` 和 `GetTime()`。
 `staticScheduler = Scheduler(true)` 使用 `GetStaticTick()` 和 `GetStaticTime()`。
 两者都用 `GetTickTime()` 把秒数换成 wake tick。
 
-## `0x21034000` 结构细节
-
-### `0x21034100` 数据结构与生命周期
-
-#### `0x21034110` `Scheduler` 表结构
-
-##### `0x21034111` 需要核对的字段
+## `0x21034111` 结构细节 / 数据结构与生命周期 / `Scheduler` 表结构 / 需要核对的字段
 
 `Scheduler` 包含 `tasks`、`running`、`waitingfortick`、`waking`、`hibernating` 和 `attime`。
 `attime` 存放 `Periodic` 定时回调。
 `running`、`waitingfortick`、`waking`、`hibernating` 存放 coroutine `Task`。
 
-#### `0x21034120` `Periodic` 生命周期
-
-##### `0x21034121` 需要核对的字段
+## `0x21034121` 结构细节 / 数据结构与生命周期 / `Periodic` 生命周期 / 需要核对的字段
 
 `Periodic:Cancel()` 会清理 list、`fn`、`arg` 和 `nexttick`，并调用 `onfinish`。
 实体任务通过 `task_finish` 从 `inst.pendingtasks` 移除。
 单次延迟任务靠 `limit = 1` 在第一次执行后 `Cleanup()`。
 
-## `0x21035000` 阅读与验证路线
-
-### `0x21035100` 从哪里开始读源码
+## `0x21035100` 阅读与验证路线 / 从哪里开始读源码
 
 ~~~bash
 rg -n \
@@ -132,9 +104,7 @@ rg -n \
   dst-scripts/update.lua
 ~~~
 
-#### `0x21035110` 推荐顺序
-
-##### `0x21035111` 最小闭环
+### `0x21035111` 推荐顺序 / 最小闭环
 
 先追 `EntityScript:DoTaskInTime()` 到 `Scheduler:OnTick()` 的定时回调路径。
 再追 `StartThread()`、`Sleep()`、`Scheduler:Run()` 的 coroutine 路径。

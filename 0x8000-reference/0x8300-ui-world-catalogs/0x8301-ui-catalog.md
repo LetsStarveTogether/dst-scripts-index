@@ -6,13 +6,7 @@ Screen 目录收录 135 个 Lua 文件。
 
 Widget 目录收录 272 个 Lua 文件。
 
-## `0x83011000` Screen 文件
-
-### `0x83011100` 清单入口
-
-#### `0x83011110` 机器可读块
-
-##### `0x83011111` 验证点
+## `0x83011111` Screen 文件 / 清单入口 / 机器可读块 / 验证点
 
 - `dst-scripts/screens/DebugMenuScreen.lua`
 - `dst-scripts/screens/bigpopupdialog.lua`
@@ -150,13 +144,7 @@ Widget 目录收录 272 个 Lua 文件。
 - `dst-scripts/screens/wardrobepopup.lua`
 - `dst-scripts/screens/worldgenscreen.lua`
 
-## `0x83012000` Widget 文件
-
-### `0x83012100` 清单入口
-
-#### `0x83012110` 机器可读块
-
-##### `0x83012111` 验证点
+## `0x83012111` Widget 文件 / 清单入口 / 机器可读块 / 验证点
 
 - `dst-scripts/widgets/animbutton.lua`
 - `dst-scripts/widgets/animspinner.lua`

@@ -5,13 +5,7 @@
 
 目录级语义由本 README 承载，独立专题文件只解释具体运行链路。
 
-## `0x60001000` 区域定位
-
-### `0x60001100` 阅读问题
-
-#### `0x60001110` 运行时入口
-
-##### `0x60001111` 验证点
+## `0x60001111` 区域定位 / 阅读问题 / 运行时入口 / 验证点
 
 玩法系统不是 prefab 名称清单。
 一个完整行为通常跨 `Prefab`、component、action、StateGraph、Brain、world component 和 UI/replica。
@@ -30,11 +24,7 @@
 | `dst-scripts/constants.lua` | `SPECIAL_EVENTS` | 活动开关 |
 | `dst-scripts/components/leader.lua` | `AddFollower` | 追随关系 |
 
-### `0x60002100` 入口选择
-
-#### `0x60002110` `dst-scripts/prefabs/player_common.lua`
-
-##### `0x60002111` 搜索信号
+### `0x60002111` 入口选择 / `dst-scripts/prefabs/player_common.lua` / 搜索信号
 
 用 `MakePlayerCharacter` 判断玩家实体具备哪些组件。
 再从 action 或 component 进入具体玩法专题。
@@ -55,22 +45,12 @@ flowchart TD
     H --> B
 ~~~
 
-### `0x60003100` 导航原则
-
-#### `0x60003110` 专题入口
-
-##### `0x60003111` 本区不放穷举清单
+### `0x60003111` 导航原则 / 专题入口 / 本区不放穷举清单
 
 本区索引只放运行关系和源码入口。
 完整 Prefab、Component、StateGraph、Brain、Widget、Screen 目录统一进入 `0x8000-reference`。
 
-## `0x60004000` 目录索引
-
-### `0x60004100` README 载体
-
-#### `0x60004110` 二级目录
-
-##### `0x60004111` 链接校验
+## `0x60004111` 目录索引 / README 载体 / 二级目录 / 链接校验
 
 以下入口先进入目录 README，再进入具体专题文件。
 
@@ -85,9 +65,7 @@ flowchart TD
 - [Ocean 与 Boating](0x6300-items-crafting-events/0x6302-ocean-boating.md)
 - [Events 与 Factions](0x6300-items-crafting-events/0x6303-events-factions.md)
 
-## `0x60005000` 阅读与验证路线
-
-### `0x60005100` 从哪里开始读源码
+## `0x60005100` 阅读与验证路线 / 从哪里开始读源码
 
 ~~~bash
 rg -n "MakePlayerCharacter|AddComponent\\(\"combat\"\\)|AddComponent\\(\"builder\"\\)" \
@@ -107,9 +85,7 @@ rg -n "Recipe2|boatphysics|SPECIAL_EVENTS|AddFollower|SetLeader" \
   dst-scripts/components/follower.lua
 ~~~
 
-#### `0x60005110` 最小闭环
-
-##### `0x60005111` 抽样动作
+### `0x60005111` 最小闭环 / 抽样动作
 
 抽样一条战斗链路：`ACTIONS.ATTACK -> Combat:DoAttack -> Health:DoDelta`。
 再抽样一条制作链路：`Recipe2 -> Builder:MakeRecipe -> ACTIONS.BUILD -> Builder:DoBuild`。

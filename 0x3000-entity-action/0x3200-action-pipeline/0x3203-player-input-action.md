@@ -4,21 +4,11 @@
 -> stategraph/action fn` 写完整链路。
 它用鼠标输入作为主线，同时标出客户端预测和 server 权威执行的分叉。
 
-## `0x32031000` 本页定位
-
-### `0x32031100` 要回答的运行时问题
-
-#### `0x32031110` 玩家点击后发生什么
-
-##### `0x32031111` 验证点
+## `0x32031111` 本页定位 / 要回答的运行时问题 / 玩家点击后发生什么 / 验证点
 
 目标是验收从鼠标目标、候选动作、`BufferedAction`、RPC/preview 到服务端 `ACTIONS.*.fn` 的关键链路。
 
-### `0x32031200` 输入层与动作层的边界
-
-#### `0x32031210` 输入不直接执行组件副作用
-
-##### `0x32031211` 边界条件
+## `0x32031211` 本页定位 / 输入层与动作层的边界 / 输入不直接执行组件副作用 / 边界条件
 
 `input.lua` 提供鼠标位置、HUD 下实体、世界下实体和控制状态。
 `PlayerController` 才把这些状态转成 `LMBaction`、`RMBaction`、RPC 或 locomotor preview。
@@ -42,19 +32,13 @@
 | `dst-scripts/stategraphs/SGwilson.lua` | `ActionHandler(ACTIONS.*)` | 服务端玩家动作状态映射 |
 | `dst-scripts/stategraphs/SGwilson_client.lua` | `ActionHandler(ACTIONS.*)` | 客户端预测动作状态映射 |
 
-### `0x32032100` 主锚点
-
-#### `0x32032110` `dst-scripts/components/playercontroller.lua`
-
-##### `0x32032111` 搜索信号
+### `0x32032111` 主锚点 / `dst-scripts/components/playercontroller.lua` / 搜索信号
 
 先找 `LMBaction` 和 `RMBaction`。
 它们在 `OnUpdate` 中由 `playeractionpicker:DoGetMouseActions()` 刷新，点击时由
 `GetLeftMouseAction()` 和 `GetRightMouseAction()` 读取。
 
-#### `0x32032120` `dst-scripts/input.lua`
-
-##### `0x32032121` 搜索信号
+### `0x32032121` 主锚点 / `dst-scripts/input.lua` / 搜索信号
 
 再找 `GetWorldPosition`、`GetWorldEntityUnderMouse` 和 `GetHUDEntityUnderMouse`。
 这些函数解释为什么 UI 上的点击不会直接进入世界动作链路。
@@ -84,47 +68,31 @@ flowchart TD
     P --> Q["ACTIONS.*.fn / component side effect"]
 ~~~
 
-### `0x32033100` 缓存分段
-
-#### `0x32033110` `PlayerController:OnUpdate`
-
-##### `0x32033111` 验证点
+### `0x32033111` 缓存分段 / `PlayerController:OnUpdate` / 验证点
 
 非手柄模式下，`OnUpdate` 会把 `DoGetMouseActions()` 的结果写入 `self.LMBaction` 和 `self.RMBaction`。
 手柄模式会清空鼠标动作并转去 `UpdateControllerTargets(dt)`。
 
-#### `0x32033120` `DoGetMouseActions`
-
-##### `0x32033121` 验证点
+### `0x32033121` 缓存分段 / `DoGetMouseActions` / 验证点
 
 `DoGetMouseActions` 会在没有显式 position 时读取 `TheInput:GetWorldPosition()` 和
 `TheInput:GetWorldEntityUnderMouse()`。
 如果 HUD 下有实体，它会提前返回。
 AOE targeting 时，position 会来自 reticule，而不是普通鼠标世界点。
 
-### `0x32033200` 点击分段
-
-#### `0x32033210` `OnLeftClick`
-
-##### `0x32033211` 验证点
+### `0x32033211` 点击分段 / `OnLeftClick` / 验证点
 
 左键先处理拖拽、放置、AOE 复施、双击动作和地图目标。
 常规路径读取 `GetLeftMouseAction()`。
 如果没有左键动作，它会构造 `BufferedAction(self.inst, nil, ACTIONS.WALKTO, nil, position)`。
 
-#### `0x32033220` `OnRightClick`
-
-##### `0x32033221` 验证点
+### `0x32033221` 点击分段 / `OnRightClick` / 验证点
 
 右键会先关闭放置或 AOE targeting。
 常规路径读取 `GetRightMouseAction()`。
 没有右键动作时，它可能归还 active item、尝试 AOE targeting 或只发送空 `RPC.RightClick`。
 
-### `0x32033300` 提交分段
-
-#### `0x32033310` `PlayerController:DoAction`
-
-##### `0x32033311` 验证点
+### `0x32033311` 提交分段 / `PlayerController:DoAction` / 验证点
 
 `DoAction` 大多数路径会先检查 `buffaction`、目标有效性、忙碌状态和重复动作。
 非预测客户端没有 locomotor、存在 `non_preview_cb` 且没有 `pre_action_cb` 时，会先发送 RPC。
@@ -133,9 +101,7 @@ AOE targeting 时，position 会来自 reticule，而不是普通鼠标世界点
 没有 locomotor 的非预测客户端通过 `non_preview_cb` 发送 RPC。
 有 locomotor 且可移动时走 `locomotor:PreviewAction(buffaction, true)`。
 
-#### `0x32033320` 非鼠标入口
-
-##### `0x32033321` 验证点
+### `0x32033321` 提交分段 / 非鼠标入口 / 验证点
 
 鼠标只是本页主线，不是玩家动作的唯一入口。
 
@@ -145,50 +111,32 @@ controller attack、controller action、inventory tile action 和 map action 也
 
 这些入口最终仍回到 `DoAction`、`locomotor:PreviewAction`、`OnRemote*` 或 `RemoteBufferedAction`。
 
-#### `0x32033330` RPC 与预测
-
-##### `0x32033331` 验证点
+### `0x32033331` 提交分段 / RPC 与预测 / 验证点
 
 客户端点击路径会为 `act` 填入 `preview_cb` 或 `non_preview_cb`。
 这些回调发送 `RPC.LeftClick`、`RPC.RightClick`、`RPC.ActionButton` 等消息。
 服务端 `OnRemote*` 路径会根据 action code、target、position 和 mod 名重建对应动作。
 
-## `0x32034000` 结构细节
-
-### `0x32034100` 输入来源
-
-#### `0x32034110` 鼠标目标与 HUD 阻挡
-
-##### `0x32034111` 需要核对的字段
+## `0x32034111` 结构细节 / 输入来源 / 鼠标目标与 HUD 阻挡 / 需要核对的字段
 
 `TheInput:GetHUDEntityUnderMouse()` 是输入链路进入世界前的重要过滤点。
 `TheInput:GetWorldEntityUnderMouse()` 提供实体目标。
 `TheInput:GetWorldPosition()` 或 `TheSim:ProjectScreenPos` 提供点位。
 
-### `0x32034200` 候选动作缓存
-
-#### `0x32034210` `LMBaction` 与 `RMBaction`
-
-##### `0x32034211` 需要核对的字段
+## `0x32034211` 结构细节 / 候选动作缓存 / `LMBaction` 与 `RMBaction` / 需要核对的字段
 
 `GetLeftMouseAction()` 只是返回 `self.LMBaction`。
 `GetRightMouseAction()` 只是返回 `self.RMBaction`。
 真正复杂的候选计算在 `PlayerActionPicker:DoGetMouseActions()`。
 
-### `0x32034300` 服务端权威执行
-
-#### `0x32034310` `PushAction` 到 `BufferedAction:Do`
-
-##### `0x32034311` 需要核对的字段
+## `0x32034311` 结构细节 / 服务端权威执行 / `PushAction` 到 `BufferedAction:Do` / 需要核对的字段
 
 本地权威端通常经 `locomotor:PushAction` 推进到实体动作。
 服务端接收 RPC 后也会走同一类权威动作执行路径。
 最终验证点仍是 `EntityScript:PushBufferedAction`、`StateGraphInstance:StartAction` 和
 `BufferedAction:Do`。
 
-## `0x32035000` 阅读与验证路线
-
-### `0x32035100` 从哪里开始读源码
+## `0x32035100` 阅读与验证路线 / 从哪里开始读源码
 
 ~~~bash
 rg -n "LMBaction|RMBaction|DoGetMouseActions|GetLeftMouseAction|GetRightMouseAction" \
@@ -205,9 +153,7 @@ rg -n "ActionHandler\\(ACTIONS\\." \
   dst-scripts/stategraphs/SGwilson.lua dst-scripts/stategraphs/SGwilson_client.lua
 ~~~
 
-#### `0x32035110` 推荐顺序
-
-##### `0x32035111` 最小闭环
+### `0x32035111` 推荐顺序 / 最小闭环
 
 先读 `PlayerController:OnUpdate`，确认 `LMBaction/RMBaction` 何时刷新。
 再读 `OnLeftClick` 或 `OnRightClick`，确认点击如何提交。

@@ -4,13 +4,7 @@
 
 本页只解释 Lua 可见的网络结构，不尝试展开 C++ 网络管理器。
 
-## `0x22031000` 本页定位
-
-### `0x22031100` 要回答的运行时问题
-
-#### `0x22031110` 为什么 Client 读 `inst.replica`
-
-##### `0x22031111` 验证点
+## `0x22031111` 本页定位 / 要回答的运行时问题 / 为什么 Client 读 `inst.replica` / 验证点
 
 client 侧动作判断经常读取 `inst.replica`。
 
@@ -18,11 +12,7 @@ server 侧权威状态仍然保存在真实 component 中。
 
 `entityreplica.lua` 用 `_component` 和 `__component` tag 决定 client 是否创建 replica component。
 
-### `0x22031200` Classified 的位置
-
-#### `0x22031210` 私有或高频状态
-
-##### `0x22031211` 验证点
+## `0x22031211` 本页定位 / Classified 的位置 / 私有或高频状态 / 验证点
 
 `mainfunctions.lua` 和 `networking.lua` 都会检查 `player.player_classified`。
 
@@ -48,41 +38,25 @@ classified 不是普通 component。
 | `dst-scripts/shardnetworking.lua` | `Shard_WorldSave` | 跨 shard 触发世界保存 |
 | `dst-scripts/shardnetworking.lua` | shard transaction helpers | vote、boss、merm 与 shard transaction 同步 |
 
-### `0x22032100` 主锚点
-
-#### `0x22032110` `dst-scripts/entityreplica.lua`
-
-##### `0x22032111` 搜索信号
+### `0x22032111` 主锚点 / `dst-scripts/entityreplica.lua` / 搜索信号
 
 先搜索 `REPLICATABLE_COMPONENTS`。
 
 再搜索 `ReplicateComponent`，确认 replica 文件名由 `name .. "_replica"` 组成。
 
-### `0x22032200` 实体锚点
-
-#### `0x22032210` `dst-scripts/entityscript.lua`
-
-##### `0x22032211` 搜索信号
+### `0x22032211` 实体锚点 / `dst-scripts/entityscript.lua` / 搜索信号
 
 搜索 `self.replica = { _ = {}, inst = self }`。
 
 这个表使用 metatable 访问内部 `_` 容器。
 
-### `0x22032300` 动作锚点
-
-#### `0x22032310` `actionreplica`
-
-##### `0x22032311` 搜索信号
+### `0x22032311` 动作锚点 / `actionreplica` / 搜索信号
 
 搜索 `actioncomponents`、`inherentactions` 和 `modactioncomponents`。
 
 这些字段通过 net byte array 同步动作候选所需的组件标记。
 
-### `0x22032400` Netvar 锚点
-
-#### `0x22032410` `dst-scripts/netvars.lua`
-
-##### `0x22032411` 搜索信号
+### `0x22032411` Netvar 锚点 / `dst-scripts/netvars.lua` / 搜索信号
 
 搜索 `netvar:set` 和 `netvar:value` 的注释。
 
@@ -101,11 +75,7 @@ flowchart TD
     F --> G["inst.replica.name"]
 ~~~
 
-### `0x22033100` Server 标记阶段
-
-#### `0x22033110` `_component`
-
-##### `0x22033111` 边界条件
+### `0x22033111` Server 标记阶段 / `_component` / 边界条件
 
 `ReplicateComponent` 只接受 `REPLICATABLE_COMPONENTS` 中的名称。
 
@@ -113,31 +83,19 @@ server 侧会添加 `_"..name` tag。
 
 如果实体已经有 `__"..name` tag，会移除该 tag 并提前返回。
 
-### `0x22033200` Client 构造阶段
-
-#### `0x22033210` `components/*_replica.lua`
-
-##### `0x22033211` 边界条件
+### `0x22033211` Client 构造阶段 / `components/*_replica.lua` / 边界条件
 
 client 初始反序列化 tag 后触发 `EntityScript:ReplicateEntity()`。
 
 它遍历 `REPLICATABLE_COMPONENTS`，只为带 `_name` 或 `__name` tag 的组件创建 replica。
 
-### `0x22033300` Classified 附着阶段
-
-#### `0x22033310` `TryAttachClassifiedToReplicaComponent`
-
-##### `0x22033311` 边界条件
+### `0x22033311` Classified 附着阶段 / `TryAttachClassifiedToReplicaComponent` / 边界条件
 
 classified 可以附着到已经 pre-replicated 或 unreplicated 的组件。
 
 如果 replica component 不存在，附着会失败并返回 `false`。
 
-### `0x22033400` Shard 同步阶段
-
-#### `0x22033410` `shardnetworking.lua`
-
-##### `0x22033411` 边界条件
+### `0x22033411` Shard 同步阶段 / `shardnetworking.lua` / 边界条件
 
 shard 同步不通过普通 replica component 表达。
 
@@ -147,43 +105,25 @@ shard 同步不通过普通 replica component 表达。
 
 同文件还处理 portal 状态、投票、boss、merm 和 shard transaction 等跨世界消息。
 
-## `0x22034000` 结构细节
-
-### `0x22034100` Replica 容器
-
-#### `0x22034110` `self.replica._`
-
-##### `0x22034111` 需要核对的字段
+## `0x22034111` 结构细节 / Replica 容器 / `self.replica._` / 需要核对的字段
 
 真实 replica 对象放在 `self.replica._[name]`。
 
 外部通常通过 `inst.replica.inventory` 这样的形式读取。
 
-### `0x22034200` 动作复制
-
-#### `0x22034210` `actionreplica`
-
-##### `0x22034211` 需要核对的字段
+## `0x22034211` 结构细节 / 动作复制 / `actionreplica` / 需要核对的字段
 
 `actionreplica` 保存动作组件、固有动作和 mod 动作组件的网络数组。
 
 动作收集页需要同时读 `componentactions.lua` 和这里的 net 字段。
 
-### `0x22034300` 会话序列化
-
-#### `0x22034310` `SerializeUserSession`
-
-##### `0x22034311` 需要核对的字段
+## `0x22034311` 结构细节 / 会话序列化 / `SerializeUserSession` / 需要核对的字段
 
 玩家会话保存会调用 `player:GetSaveRecord()`。
 
 server 侧会把 `player.player_classified.entity` 传入 `TheNet:SerializeUserSession()`。
 
-### `0x22034400` Netvar 类型选择
-
-#### `0x22034410` `GetIdealUnsignedNetVarForCount`
-
-##### `0x22034411` 需要核对的字段
+## `0x22034411` 结构细节 / Netvar 类型选择 / `GetIdealUnsignedNetVarForCount` / 需要核对的字段
 
 计数小于等于 `7` 时返回 `net_tinybyte`。
 
@@ -191,11 +131,7 @@ server 侧会把 `player.player_classified.entity` 传入 `TheNet:SerializeUserS
 
 超过 `net_uint` 范围时返回 `nil`。
 
-### `0x22034500` Shard 消息
-
-#### `0x22034510` Connected Shards 与 Transaction
-
-##### `0x22034511` 需要核对的字段
+## `0x22034511` 结构细节 / Shard 消息 / Connected Shards 与 Transaction / 需要核对的字段
 
 `shardnetworking.lua` 维护 connected shard、portal 和 server worldgen data。
 
@@ -203,9 +139,7 @@ server 侧会把 `player.player_classified.entity` 传入 `TheNet:SerializeUserS
 
 排查洞穴、地表或多 shard 行为时，应同时读 `networking.lua` 和 `shardnetworking.lua`。
 
-## `0x22035000` 阅读与验证路线
-
-### `0x22035100` 从哪里开始读源码
+## `0x22035100` 阅读与验证路线 / 从哪里开始读源码
 
 ~~~bash
 rg -n "REPLICATABLE_COMPONENTS|ReplicateComponent|ReplicateEntity" \
@@ -225,9 +159,7 @@ rg -n "SerializeWorldSession|Shard_UpdateWorldState|Shard_WorldSave|ShardPortals
   dst-scripts/shardnetworking.lua
 ~~~
 
-#### `0x22035110` 推荐顺序
-
-##### `0x22035111` 最小闭环
+### `0x22035111` 推荐顺序 / 最小闭环
 
 先读 `entityreplica.lua` 顶部的组件白名单。
 

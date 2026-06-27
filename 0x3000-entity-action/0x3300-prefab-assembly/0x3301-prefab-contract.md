@@ -6,13 +6,7 @@ Prefab 装配契约解释 `Prefab(name, fn, assets, deps)` 如何变成可生成
 
 完整 prefab 文件清单由 `0x8000-reference/0x8200-runtime-catalogs/0x8201-prefab-catalog.md` 承担。
 
-## `0x33011000` 本页定位
-
-### `0x33011100` 要回答的运行时问题
-
-#### `0x33011110` 声明对象是什么
-
-##### `0x33011111` 验证点
+## `0x33011111` 本页定位 / 要回答的运行时问题 / 声明对象是什么 / 验证点
 
 `Prefab` 对象不是实体。
 
@@ -22,9 +16,7 @@ Prefab 装配契约解释 `Prefab(name, fn, assets, deps)` 如何变成可生成
 
 真正的实体在 `SpawnPrefabFromSim` 执行 `prefab.fn(TheSim)` 时才出现。
 
-#### `0x33011120` `fn` 的分界在哪里
-
-##### `0x33011121` 验证点
+## `0x33011121` 本页定位 / 要回答的运行时问题 / `fn` 的分界在哪里 / 验证点
 
 大多数网络 prefab 的 `fn` 先创建实体、网络、动画、标签和客户端可读 netvars。
 
@@ -34,9 +26,7 @@ Prefab 装配契约解释 `Prefab(name, fn, assets, deps)` 如何变成可生成
 
 这个分界决定客户端能直接展示什么，以及哪些状态必须通过 replica 或 classified 投影。
 
-#### `0x33011130` Helper 文件承担什么
-
-##### `0x33011131` 验证点
+## `0x33011131` 本页定位 / 要回答的运行时问题 / Helper 文件承担什么 / 验证点
 
 `dst-scripts/prefabutil.lua` 可以返回 prefab 工厂。
 
@@ -57,11 +47,7 @@ Prefab 装配契约解释 `Prefab(name, fn, assets, deps)` 如何变成可生成
 | `dst-scripts/prefabs/rabbit.lua` | `fn` | 普通生物的 pristine/client return/server component 样例 |
 | `dst-scripts/prefabs/player_common.lua` | `MakePlayerCharacter` | 玩家 prefab 的资产合并、prereplica 标签和 classified 装配样例 |
 
-### `0x33012100` 注册锚点
-
-#### `0x33012110` `dst-scripts/prefabs.lua`
-
-##### `0x33012111` 搜索信号
+### `0x33012111` 注册锚点 / `dst-scripts/prefabs.lua` / 搜索信号
 
 `Prefab` 构造器会去掉旧式路径前缀，只保留最后一段作为 `self.name`。
 
@@ -71,9 +57,7 @@ Prefab 装配契约解释 `Prefab(name, fn, assets, deps)` 如何变成可生成
 
 因此 `deps` 不是手写列表的简单回显。
 
-#### `0x33012120` `dst-scripts/mainfunctions.lua`
-
-##### `0x33012121` 搜索信号
+### `0x33012121` 注册锚点 / `dst-scripts/mainfunctions.lua` / 搜索信号
 
 `LoadPrefabFile` 使用 `loadfile(filename)` 得到 chunk。
 
@@ -85,11 +69,7 @@ Prefab 装配契约解释 `Prefab(name, fn, assets, deps)` 如何变成可生成
 
 最后它调用 `TheSim:RegisterPrefab(prefab.name, prefab.assets, prefab.deps)`。
 
-### `0x33012200` 生成锚点
-
-#### `0x33012210` `SpawnPrefab` 到 `SpawnPrefabFromSim`
-
-##### `0x33012211` 搜索信号
+### `0x33012211` 生成锚点 / `SpawnPrefab` 到 `SpawnPrefabFromSim` / 搜索信号
 
 Lua 侧 `SpawnPrefab(name, skin, skin_id, creator, skin_custom)` 会调用 `TheSim:SpawnPrefab`。
 
@@ -121,11 +101,7 @@ flowchart TD
     K --> L["PrefabPostInit + entity_spawned"]
 ~~~
 
-### `0x33013100` 声明阶段
-
-#### `0x33013110` `Prefab(name, fn, assets, deps)`
-
-##### `0x33013111` 边界条件
+### `0x33013111` 声明阶段 / `Prefab(name, fn, assets, deps)` / 边界条件
 
 `assets` 是注册阶段交给模拟层解析的资源声明。
 
@@ -135,9 +111,7 @@ flowchart TD
 
 `force_path_search` 和 `search_asset_first_path` 只影响资产解析，不改变实体生命周期。
 
-#### `0x33013120` Prefab 文件返回值
-
-##### `0x33013121` 边界条件
+### `0x33013121` 声明阶段 / Prefab 文件返回值 / 边界条件
 
 一个 prefab 文件可以返回多个值。
 
@@ -145,19 +119,13 @@ flowchart TD
 
 helper table、局部函数和普通配置表不会被自动注册。
 
-### `0x33013200` 生成阶段
-
-#### `0x33013210` Pristine 前
-
-##### `0x33013211` 边界条件
+### `0x33013211` 生成阶段 / Pristine 前 / 边界条件
 
 pristine 前适合放网络存在性、基础标签、动画 bank/build、inventory image override 和客户端可判断状态。
 
 如果状态需要初始同步给远端客户端，它必须在 `SetPristine` 前以标签、netvar 或网络组件形式存在。
 
-#### `0x33013220` Pristine 后
-
-##### `0x33013221` 边界条件
+### `0x33013221` 生成阶段 / Pristine 后 / 边界条件
 
 `SetPristine` 后的 master sim 分支适合放 server component、SG、Brain、保存/加载函数和权威事件监听。
 
@@ -165,13 +133,7 @@ client 分支返回后不能依赖 server-only component。
 
 如果文档把 client 可见状态写成 server component 直接可读，应视为不一致。
 
-## `0x33014000` 代表性样例
-
-### `0x33014100` 普通生物
-
-#### `0x33014110` `dst-scripts/prefabs/rabbit.lua`
-
-##### `0x33014111` 需要核对的字段
+## `0x33014111` 代表性样例 / 普通生物 / `dst-scripts/prefabs/rabbit.lua` / 需要核对的字段
 
 `rabbit` 的 `fn` 先添加 `Transform`、`AnimState`、`SoundEmitter`、`DynamicShadow` 和 `Network`。
 
@@ -185,11 +147,7 @@ master sim 分支才添加 `locomotor`、`drownable`、`eater`、`inventoryitem`
 
 注释明确说明 `locomotor` 必须在 `SetStateGraph("SGrabbit")` 前构造。
 
-### `0x33014200` 玩家 Prefab
-
-#### `0x33014210` `dst-scripts/prefabs/player_common.lua`
-
-##### `0x33014211` 需要核对的字段
+## `0x33014211` 代表性样例 / 玩家 Prefab / `dst-scripts/prefabs/player_common.lua` / 需要核对的字段
 
 `MakePlayerCharacter` 合并基础玩家资产、基础 deps、`customassets` 和 `customprefabs`。
 
@@ -205,11 +163,7 @@ master sim 分支才添加 `locomotor`、`drownable`、`eater`、`inventoryitem`
 
 随后 master sim 生成 `player_classified`，并把它设为玩家实体的 child。
 
-### `0x33014300` Helper 工厂
-
-#### `0x33014310` `dst-scripts/prefabutil.lua`
-
-##### `0x33014311` 需要核对的字段
+## `0x33014311` 代表性样例 / Helper 工厂 / `dst-scripts/prefabutil.lua` / 需要核对的字段
 
 `MakePlacer` 返回 `Prefab(name, fn)`，但它创建的是非网络 placement helper。
 
@@ -217,9 +171,7 @@ master sim 分支才添加 `locomotor`、`drownable`、`eater`、`inventoryitem`
 
 这个工厂仍然遵守 `AddNetwork`、`SetPristine`、client return、master sim component 的分界。
 
-#### `0x33014320` `dst-scripts/standardcomponents.lua`
-
-##### `0x33014321` 需要核对的字段
+## `0x33014321` 代表性样例 / Helper 工厂 / `dst-scripts/standardcomponents.lua` / 需要核对的字段
 
 `MakeInventoryPhysics`、`MakeCharacterPhysics` 等 helper 直接修改传入实体。
 
@@ -229,13 +181,7 @@ master sim 分支才添加 `locomotor`、`drownable`、`eater`、`inventoryitem`
 
 这类 helper 要按调用位置判断 client/server 可见性，不能只按函数所在文件判断。
 
-## `0x33015000` 覆盖口径
-
-### `0x33015100` 不在本页展开的内容
-
-#### `0x33015110` 完整清单
-
-##### `0x33015111` 边界条件
+## `0x33015111` 覆盖口径 / 不在本页展开的内容 / 完整清单 / 边界条件
 
 `dst-scripts/prefabs/` 下的完整 Lua 文件覆盖在 `0x8201-prefab-catalog.md` 中校验。
 
@@ -243,17 +189,13 @@ master sim 分支才添加 `locomotor`、`drownable`、`eater`、`inventoryitem`
 
 重复清单会让文档与 `git ls-files` 产生双重维护风险。
 
-#### `0x33015120` 大型 Prefab 内部逻辑
-
-##### `0x33015121` 边界条件
+## `0x33015121` 覆盖口径 / 不在本页展开的内容 / 大型 Prefab 内部逻辑 / 边界条件
 
 具体角色、boss、物品、FX 的内部 AI、掉落、技能和视觉逻辑进入对应专题。
 
 本页只问它们如何成为 prefab 实体。
 
-## `0x33016000` 阅读与验证路线
-
-### `0x33016100` 从哪里开始读源码
+## `0x33016100` 阅读与验证路线 / 从哪里开始读源码
 
 ~~~bash
 rg -n "Prefab = Class|LoadPrefabFile|RegisterPrefabsImpl|SpawnPrefabFromSim|function SpawnPrefab\\b" \
@@ -266,9 +208,7 @@ rg -n "SetPristine|TheWorld\\.ismastersim|SetStateGraph|SetBrain|return Prefab" 
   dst-scripts/prefabutil.lua
 ~~~
 
-#### `0x33016110` 推荐顺序
-
-##### `0x33016111` 最小闭环
+### `0x33016111` 推荐顺序 / 最小闭环
 
 先追 `dst-scripts/prefabs.lua` 的 `Prefab` 构造器。
 
@@ -278,9 +218,7 @@ rg -n "SetPristine|TheWorld\\.ismastersim|SetStateGraph|SetBrain|return Prefab" 
 
 最后用 `MakePlayerCharacter` 验证玩家 prereplica 标签和 classified 依赖。
 
-#### `0x33016120` 常见误读
-
-##### `0x33016121` 验证点
+### `0x33016121` 常见误读 / 验证点
 
 不要把 `assets` 看成实体字段。
 

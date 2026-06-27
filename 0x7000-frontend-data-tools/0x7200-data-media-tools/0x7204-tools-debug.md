@@ -3,13 +3,7 @@
 工具 Debug 页收束 console 命令、debug helpers、debug keys、debug render 和离线维护脚本。
 这些入口适合验证源码理解，但不应被写成 gameplay 主流程。
 
-## `0x72041000` 本页定位
-
-### `0x72041100` 要回答的运行时问题
-
-#### `0x72041110` 源码阅读目标
-
-##### `0x72041111` 验证点
+## `0x72041111` 本页定位 / 要回答的运行时问题 / 源码阅读目标 / 验证点
 
 目标是给阅读源码时的验证动作提供入口，而不是把 debug 当 gameplay。
 `DebugSpawn` 的定义在 `dst-scripts/util.lua`。
@@ -29,29 +23,17 @@
 | `dst-scripts/tools/getmissingstrings.lua` | `strings` | 文本工具 |
 | `dst-scripts/tools/generate_worldgenoverride.lua` | `worldgen` | 世界设置工具 |
 
-### `0x72042100` 主锚点
-
-#### `0x72042110` `dst-scripts/util.lua`
-
-##### `0x72042111` 搜索信号
+### `0x72042111` 主锚点 / `dst-scripts/util.lua` / 搜索信号
 
 先在 `dst-scripts/util.lua` 搜索 `function DebugSpawn`。
 再到 `consolecommands.lua` 搜索 `c_spawn` 和 `c_give`，确认它们如何调用 `DebugSpawn`。
 
-### `0x72042200` 检查锚点
-
-#### `0x72042210` `dst-scripts/debughelpers.lua`
-
-##### `0x72042211` 验证点
+### `0x72042211` 检查锚点 / `dst-scripts/debughelpers.lua` / 验证点
 
 `debughelpers.lua` 只有 50 多行，重点是 `DumpComponent`、`DumpEntity` 和 `DumpUpvalues`。
 它在 `main.lua` 启动后被 require，适合检查实体结构，而不是负责生成实体。
 
-### `0x72042300` 维护脚本锚点
-
-#### `0x72042310` `dst-scripts/tools`
-
-##### `0x72042311` 边界条件
+### `0x72042311` 维护脚本锚点 / `dst-scripts/tools` / 边界条件
 
 `dst-scripts/tools/getmissingstrings.lua` 通过 `package.path` 加载脚本并检查缺失文本。
 `dst-scripts/tools/generate_worldgenoverride.lua` 需要在游戏 console 中 `require 'tools/generate_worldgenoverride'` 执行。
@@ -74,51 +56,29 @@ flowchart TD
     J --> K["offline or console maintenance output"]
 ~~~
 
-### `0x72043100` 控制台阶段
-
-#### `0x72043110` `c_spawn` 与 `c_give`
-
-##### `0x72043111` 边界条件
+### `0x72043111` 控制台阶段 / `c_spawn` 与 `c_give` / 边界条件
 
 `c_spawn(prefab)` 会把 prefab 转小写并调用 `DebugSpawn(prefab)`。
 生成后会用 `SetDebugEntity(inst)` 选中新实体。
 `c_give(prefab)` 同样生成实体，然后交给玩家 inventory。
 
-### `0x72043200` Debug 命令阶段
-
-#### `0x72043210` `d_` 命令族
-
-##### `0x72043211` 搜索信号
+### `0x72043211` Debug 命令阶段 / `d_` 命令族 / 搜索信号
 
 `debugcommands.lua` 收集大量 `d_` 函数。
 其中 `d_createscrapbookdata()`、`d_scanlayout()`、`d_testsound()` 这类命令能把运行时观察转成数据或导出文件。
 
-### `0x72043300` Debug Key 阶段
-
-#### `0x72043310` `CHEATS_ENABLED`
-
-##### `0x72043311` 验证点
+### `0x72043311` Debug Key 阶段 / `CHEATS_ENABLED` / 验证点
 
 `main.lua` 只在 `CHEATS_ENABLED` 时 require `debugcommands.lua` 和 `debugkeys.lua`。
 因此快捷键和部分 `d_` 命令不是普通运行环境的必经路径。
 
-### `0x72043400` Tools 阶段
-
-#### `0x72043410` 维护脚本输出
-
-##### `0x72043411` 边界条件
+### `0x72043411` Tools 阶段 / 维护脚本输出 / 边界条件
 
 `generate_worldgenoverride.lua` 会写出 `worldgenoverride.lua`。
 `getmissingstrings.lua` 面向字符串覆盖检查。
 审计这些脚本时要看它们读哪些表、写什么文件、是否依赖游戏内环境。
 
-## `0x72044000` 结构细节
-
-### `0x72044100` 数据结构与生命周期
-
-#### `0x72044110` 具体 Lua 结构
-
-##### `0x72044111` 需要核对的字段
+## `0x72044111` 结构细节 / 数据结构与生命周期 / 具体 Lua 结构 / 需要核对的字段
 
 `DebugSpawn` 定义在 `util.lua`，它会 `TheSim:LoadPrefabs({ prefab })`，然后在 `ConsoleWorldPosition()` 生成实体。
 `consolecommands.lua` 提供 `c_spawn`、`c_give`、`c_select`、`c_find`、`c_sounddebug` 等可组合入口。
@@ -127,9 +87,7 @@ flowchart TD
 `debugkeys.lua` 把调试功能挂到键盘事件。
 `tools` 目录目前只有 2 个 Lua 文件，偏维护，不应作为运行时主线。
 
-## `0x72045000` 阅读与验证路线
-
-### `0x72045100` 从哪里开始读源码
+## `0x72045100` 阅读与验证路线 / 从哪里开始读源码
 
 ~~~bash
 rg -n "function DebugSpawn|ConsoleWorldPosition|SpawnPrefab" \
@@ -150,9 +108,7 @@ rg -n "package.path|generate_worldgenoverride|GetWorldSettingsOptions|GetMissing
   dst-scripts/tools
 ~~~
 
-#### `0x72045110` 推荐顺序
-
-##### `0x72045111` 最小闭环
+### `0x72045111` 推荐顺序 / 最小闭环
 
 复现 prefab 问题时，从 `c_spawn -> DebugSpawn -> SpawnPrefab` 开始。
 观察实体结构时，用 `DumpEntity` 或 `DumpComponent` 对照 component 页面。

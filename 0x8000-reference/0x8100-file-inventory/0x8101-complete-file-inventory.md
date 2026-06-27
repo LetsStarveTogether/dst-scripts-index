@@ -2,13 +2,7 @@
 
 本页列出 `git ls-files --recurse-submodules dst-scripts` 返回的全部 4028 个路径。
 
-## `0x81011000` 审计口径
-
-### `0x81011100` 命令来源
-
-#### `0x81011110` `git ls-files`
-
-##### `0x81011111` 验证点
+## `0x81011111` 审计口径 / 命令来源 / `git ls-files` / 验证点
 
 清单块必须与命令输出逐行一致。
 
@@ -16,13 +10,7 @@
 git ls-files --recurse-submodules dst-scripts
 ~~~
 
-## `0x81012000` 完整清单
-
-### `0x81012100` 机器可读块
-
-#### `0x81012110` `dst-scripts` 路径
-
-##### `0x81012111` 完整清单
+## `0x81012111` 完整清单 / 机器可读块 / `dst-scripts` 路径 / 完整清单
 
 <!-- dst-scripts-file-inventory:start -->
 - `dst-scripts/.github/workflows/update.yml`

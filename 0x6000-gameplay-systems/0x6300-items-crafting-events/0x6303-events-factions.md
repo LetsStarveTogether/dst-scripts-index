@@ -4,13 +4,7 @@
 这里不把节日文件做成清单。
 清单型内容统一进入 `0x8000-reference`。
 
-## `0x63031000` 本页定位
-
-### `0x63031100` 要回答的运行时问题
-
-#### `0x63031110` 活动从哪里进入运行时
-
-##### `0x63031111` 验证点
+## `0x63031111` 本页定位 / 要回答的运行时问题 / 活动从哪里进入运行时 / 验证点
 
 活动入口首先是 `dst-scripts/constants.lua` 的 `SPECIAL_EVENTS`、`WORLD_SPECIAL_EVENT`
 和 `WORLD_EXTRA_EVENTS`。
@@ -18,11 +12,7 @@
 `mainfunctions.lua` 和 `gamelogic.lua` 再根据这些状态加载 global、backend、frontend event prefabs。
 世界与 prefab 侧通过 `IsSpecialEventActive` 决定是否启用具体玩法。
 
-### `0x63031200` 阵营不是单一系统
-
-#### `0x63031210` Tags、leader、follower 与 Combat Target
-
-##### `0x63031211` 边界条件
+## `0x63031211` 本页定位 / 阵营不是单一系统 / Tags、leader、follower 与 Combat Target / 边界条件
 
 DST Lua 里没有一个统一的 faction 表覆盖所有敌友关系。
 常见关系由 tags、`leader`、`follower`、`combat:SetTarget`、`Combat:TryRetarget`
@@ -46,21 +36,13 @@ DST Lua 里没有一个统一的 faction 表覆盖所有敌友关系。
 | `dst-scripts/components/follower.lua` | `SetLeader` | 追随关系和忠诚时间 |
 | `dst-scripts/components/combat.lua` | `TryRetarget` / `SetTarget` | 敌对目标 |
 
-### `0x63032100` 活动开关锚点
-
-#### `0x63032110` `dst-scripts/constants.lua`
-
-##### `0x63032111` 搜索信号
+### `0x63032111` 活动开关锚点 / `dst-scripts/constants.lua` / 搜索信号
 
 `IsSpecialEventActive(event)` 返回 `WORLD_SPECIAL_EVENT == event` 或 `WORLD_EXTRA_EVENTS[event] == true`。
 `GetValidRecipe`、prefab 装配、菜单皮肤、世界组件和战利品逻辑都会直接调用它。
 这意味着活动不是只影响前端主题，也会影响 recipe、loot、spawner 和 prefab 行为。
 
-### `0x63032200` 世界组件锚点
-
-#### `0x63032210` `dst-scripts/prefabs/forest.lua`
-
-##### `0x63032211` 搜索信号
+### `0x63032211` 世界组件锚点 / `dst-scripts/prefabs/forest.lua` / 搜索信号
 
 `forest.lua` 在 master sim 上添加 `carnivalevent`、`yotd_raceprizemanager`、`yotc_raceprizemanager`、
 `yotb_stagemanager`、`yoth_knightmanager` 和 `yoth_hecklermanager`。
@@ -81,11 +63,7 @@ flowchart TD
     H --> I["leader/follower/combat/tag checks"]
 ~~~
 
-### `0x63033100` 活动依赖加载
-
-#### `0x63033110` Global、backend 与 Frontend
-
-##### `0x63033111` 边界条件
+### `0x63033111` 活动依赖加载 / Global、backend 与 Frontend / 边界条件
 
 `GlobalInit` 加载 `SPECIAL_EVENT_GLOBAL_PREFABS`。
 `gamelogic.lua` 在加载世界时会遍历 `SPECIAL_EVENTS`，加载每个活动的 backend prefab，
@@ -93,11 +71,7 @@ flowchart TD
 frontend prefab 则跟随当前 `SPECIAL_EVENT_FRONTEND_PREFABS`。
 活动依赖资源集中在 `prefabs/event_deps.lua`。
 
-### `0x63033200` Carnival 样例
-
-#### `0x63033210` `carnivalevent` 到 `carnival_plaza`
-
-##### `0x63033211` 验证点
+### `0x63033211` Carnival 样例 / `carnivalevent` 到 `carnival_plaza` / 验证点
 
 `carnivalevent` 是 master sim 组件。
 `SpawnCarnivalHost` 先检查 `IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL)`。
@@ -105,54 +79,34 @@ frontend prefab 则跟随当前 `SPECIAL_EVENT_FRONTEND_PREFABS`。
 登记 plaza。
 这条链路能说明活动逻辑如何从全局开关落到具体世界实体。
 
-### `0x63033300` 阵营与目标
-
-#### `0x63033310` `Leader`、`Follower` 与 `Combat`
-
-##### `0x63033311` 验证点
+### `0x63033311` 阵营与目标 / `Leader`、`Follower` 与 `Combat` / 验证点
 
 `Leader:AddFollower` 会把 follower 加进 leader 的集合，并调用 `follower.components.follower:SetLeader(self.inst)`。
 `Follower:SetLeader` 会处理旧 leader、item source、leash、`leaderchanged` 事件和友军 target 清理。
 `Combat:TryRetarget` 只在 target fn 返回新目标时更新 target。
 所以阵营关系通常是“谁跟随谁”和“谁可被设为 target”的组合，而不是单一全局状态。
 
-## `0x63034000` 结构细节
-
-### `0x63034100` 活动对配方和资源的影响
-
-#### `0x63034110` `require_special_event`
-
-##### `0x63034111` 需要核对的字段
+## `0x63034111` 结构细节 / 活动对配方和资源的影响 / `require_special_event` / 需要核对的字段
 
 `Recipe` 支持 `require_special_event`。
 `GetValidRecipe` 会用 `IsSpecialEventActive` 过滤它。
 `simutil.lua` 的 `ApplyEvent` 还会把活动对应的 `TECH` 解锁为可用。
 因此活动配方要同时核对 `constants.lua`、`recipe.lua`、`recipes.lua` 和当前世界设置。
 
-### `0x63034200` 活动 Prefab 的生命周期
-
-#### `0x63034210` `carnival_host` 与 Plaza
-
-##### `0x63034211` 需要核对的事件
+## `0x63034211` 结构细节 / 活动 Prefab 的生命周期 / `carnival_host` 与 Plaza / 需要核对的事件
 
 `carnival_host` 自身也检查 `IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL)`。
 `carnival_plaza` 在 `RegisterPlaza` 后推动 `ms_carnivalplazabuilt`。
 host 监听这个事件后可被召唤到 plaza。
 阅读活动 prefab 时，要先找世界组件如何登记实体，再看 prefab 自己的 stategraph 和 brain。
 
-### `0x63034300` 年度活动 Manager
-
-#### `0x63034310` `yoth_knightmanager`
-
-##### `0x63034311` 搜索信号
+## `0x63034311` 结构细节 / 年度活动 Manager / `yoth_knightmanager` / 搜索信号
 
 `yoth_knightmanager` 监听 `ms_knightshrineactivated` 和 `ms_knightshrinedeactivated`。
 `IsKnightShrineActive` 同时要求有 shrine 且 `IsSpecialEventActive(SPECIAL_EVENTS.YOTH)`。
 这类 manager 说明事件系统经常把“世界中有触发实体”和“活动开关开启”组合成实际可用状态。
 
-## `0x63035000` 阅读与验证路线
-
-### `0x63035100` 从哪里开始读源码
+## `0x63035100` 阅读与验证路线 / 从哪里开始读源码
 
 ~~~bash
 rg -n "SPECIAL_EVENTS|WORLD_SPECIAL_EVENT|WORLD_EXTRA_EVENTS|IsSpecialEventActive" \
@@ -176,9 +130,7 @@ rg -n "AddFollower|SetLeader|TryRetarget|SetTarget|leaderchanged" \
   dst-scripts/components/combat.lua
 ~~~
 
-#### `0x63035110` 推荐顺序
-
-##### `0x63035111` 最小闭环
+### `0x63035111` 推荐顺序 / 最小闭环
 
 先从 `constants.lua` 确认活动名和开关函数。
 再读 `simutil.lua` 的活动应用函数。

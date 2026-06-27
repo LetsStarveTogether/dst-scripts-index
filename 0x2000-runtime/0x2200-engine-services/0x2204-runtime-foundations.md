@@ -4,13 +4,7 @@
 
 它解释 `class.lua`、`json.lua` 和 `constants.lua` 如何成为后续系统的共享契约。
 
-## `0x22041000` 本页定位
-
-### `0x22041100` 要回答的运行时问题
-
-#### `0x22041110` 为什么这些文件不是普通工具函数
-
-##### `0x22041111` 验证点
+## `0x22041111` 本页定位 / 要回答的运行时问题 / 为什么这些文件不是普通工具函数 / 验证点
 
 `main.lua` 在启动早期加载 `json`、`constants` 和 `class`。
 
@@ -49,11 +43,7 @@ flowchart TD
     F --> I["gamelogic / networking / shard paths"]
 ~~~
 
-### `0x22043100` `Class` 基础层
-
-#### `0x22043110` 构造与继承
-
-##### `0x22043111` 边界条件
+### `0x22043111` `Class` 基础层 / 构造与继承 / 边界条件
 
 `Class(base, _ctor, props)` 会构造 metatable、实例 `__index` 和可选 property setter。
 
@@ -63,11 +53,7 @@ flowchart TD
 
 不要把组件、widget 或 manager 的 `Class(...)` 当作普通 table 工厂。
 
-### `0x22043200` JSON 基础层
-
-#### `0x22043210` 编码口径
-
-##### `0x22043211` 边界条件
+### `0x22043211` JSON 基础层 / 编码口径 / 边界条件
 
 `json.encode` 是源码常用入口。
 
@@ -77,11 +63,7 @@ flowchart TD
 
 阅读存档、配置、服务器数据和外部文本工具时，应先确认调用的是哪一种编码口径。
 
-### `0x22043300` 常量基础层
-
-#### `0x22043310` 共享枚举
-
-##### `0x22043311` 边界条件
+### `0x22043311` 常量基础层 / 共享枚举 / 边界条件
 
 `constants.lua` 不是只给一个系统使用。
 
@@ -93,9 +75,7 @@ flowchart TD
 
 如果这些枚举改动，文档应同步核对运行时、网络和世界状态专题。
 
-## `0x22044000` 阅读与验证路线
-
-### `0x22044100` 从哪里开始读源码
+## `0x22044100` 阅读与验证路线 / 从哪里开始读源码
 
 ~~~bash
 rg -n "require\\(\"json\"\\)|require\\(\"constants\"\\)|require\\(\"class\"\\)" \
@@ -111,9 +91,7 @@ rg -n "RESET_ACTION|SAVELOAD|REMOTESHARDSTATE|SHARDID|SHARDTRANSACTIONTYPES" \
   dst-scripts/constants.lua
 ~~~
 
-#### `0x22044110` 推荐顺序
-
-##### `0x22044111` 最小闭环
+### `0x22044111` 推荐顺序 / 最小闭环
 
 先读 `main.lua` 的加载顺序。
 

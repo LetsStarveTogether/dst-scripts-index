@@ -5,13 +5,7 @@
 
 目录级语义由本 README 承载，独立专题文件只解释具体运行链路。
 
-## `0x30001000` 区域定位
-
-### `0x30001100` 阅读问题
-
-#### `0x30001110` 运行时入口
-
-##### `0x30001111` 验证点
+## `0x30001111` 区域定位 / 阅读问题 / 运行时入口 / 验证点
 
 读者要能回答两个问题。
 一个实体如何被创建、挂载组件、订阅事件并参与存档。
@@ -29,11 +23,7 @@
 | `dst-scripts/componentactions.lua` | `EntityScript:CollectActions` | 从组件收集可执行动作 |
 | `dst-scripts/bufferedaction.lua` | `BufferedAction` | 保存动作执行上下文 |
 
-### `0x30002100` 入口选择
-
-#### `0x30002110` `dst-scripts/entityscript.lua`
-
-##### `0x30002111` 搜索信号
+### `0x30002111` 入口选择 / `dst-scripts/entityscript.lua` / 搜索信号
 
 用 `CreateEntity` 确认实体入口。
 用 `AddComponent` 确认组件挂载。
@@ -57,22 +47,12 @@ flowchart TD
     K --> L["Component side effect"]
 ~~~
 
-### `0x30003100` 导航原则
-
-#### `0x30003110` 专题入口
-
-##### `0x30003111` 本区不放穷举清单
+### `0x30003111` 导航原则 / 专题入口 / 本区不放穷举清单
 
 本区索引只放运行关系和源码入口。
 实体、组件、Prefab、SG、Brain 的完整目录统一进入 `0x8000-reference`。
 
-## `0x30004000` 目录索引
-
-### `0x30004100` README 载体
-
-#### `0x30004110` 二级目录
-
-##### `0x30004111` 链接校验
+## `0x30004111` 目录索引 / README 载体 / 二级目录 / 链接校验
 
 以下入口先进入目录 README，再进入具体专题文件。
 
@@ -88,9 +68,7 @@ flowchart TD
 - [Prefab 装配契约](0x3300-prefab-assembly/0x3301-prefab-contract.md)
 - [Replica 与 Classified](0x3300-prefab-assembly/0x3302-replica-classified.md)
 
-## `0x30005000` 阅读与验证路线
-
-### `0x30005100` 从哪里开始读源码
+## `0x30005100` 阅读与验证路线 / 从哪里开始读源码
 
 ~~~bash
 rg -n "EntityScript|PlayerActionPicker|CollectActions|BufferedAction|PushBufferedAction" \
@@ -102,9 +80,7 @@ rg -n "EntityScript|PlayerActionPicker|CollectActions|BufferedAction|PushBuffere
   dst-scripts/bufferedaction.lua
 ~~~
 
-#### `0x30005110` 最小闭环
-
-##### `0x30005111` 抽样动作
+### `0x30005111` 最小闭环 / 抽样动作
 
 先抽样 `CreateEntity` 到 `AddComponent`。
 再抽样 `input.lua`、`PlayerController`、`PlayerActionPicker` 到 `BufferedAction`。

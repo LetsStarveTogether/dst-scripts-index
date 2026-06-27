@@ -39,59 +39,57 @@
 | `dst-scripts/components/weapon.lua` | `Weapon:GetDamage` | 武器伤害与特殊伤害 |
 | `dst-scripts/standardcomponents.lua` | `DoFireDamage` | 通用火焰和状态 helper 的伤害入口 |
 
-### `0x62012100` 主锚点
-
-#### `0x62012110` `dst-scripts/actions.lua`
+### `0x62012110` 主锚点 / `dst-scripts/actions.lua`
 
 `ACTIONS.ATTACK.fn` 先检查若干 SG 状态标签。
 普通路径会调用 `act.doer.components.combat:DoAttack(act.target)` 并返回成功。
 
-##### `0x62012111` 搜索信号
+#### `0x62012111` 搜索信号
 
 搜索 `ACTIONS.ATTACK.fn`、`propattack`、`thrusting`、`helmsplitting` 和 `DoAttack`。
 
-#### `0x62012120` `dst-scripts/components/locomotor.lua`
+### `0x62012120` 主锚点 / `dst-scripts/components/locomotor.lua`
 
 攻击动作可能先进入 `LocoMotor:PushAction`。
 如果距离不足，locomotor 会用 `GoToEntity` 接近目标，再在抵达后推送 buffered action。
 
-##### `0x62012121` 搜索信号
+#### `0x62012121` 搜索信号
 
 搜索 `PushAction`、`GoToEntity`、`PushBufferedAction`、`PreviewBufferedAction` 和 `in_cooldown`。
 
-#### `0x62012130` `dst-scripts/stategraphs/SGwilson.lua`
+### `0x62012130` 主锚点 / `dst-scripts/stategraphs/SGwilson.lua`
 
 玩家攻击动作处理器会根据武器和状态选择 `attack`、`slingshot_shoot`、`blowdart`、`throw` 等状态。
 这些状态负责动画窗口和本地连击体验。
 
-##### `0x62012131` 搜索信号
+#### `0x62012131` 搜索信号
 
 搜索 `ActionHandler(ACTIONS.ATTACK`、`abouttoattack`、`slingshot_shoot`、`blowdart` 和 `throw`。
 
-#### `0x62012140` `dst-scripts/components/combat.lua`
+### `0x62012140` 主锚点 / `dst-scripts/components/combat.lua`
 
 `DoAttack` 决定武器、projectile、电击 stimuli、AOE、反伤和目标受击。
 目标组件的 `GetAttacked` 才处理防御、护甲、闪避、planar 和特殊伤害。
 
-##### `0x62012141` 搜索信号
+#### `0x62012141` 搜索信号
 
 搜索 `DoAttack`、`CalcDamage`、`CalcReflectedDamage`、`GetAttacked`、`onattackother` 和 `onhitother`。
 
-#### `0x62012150` `dst-scripts/components/health.lua`
+### `0x62012150` 主锚点 / `dst-scripts/components/health.lua`
 
 `Health:DoDelta` 是生命变化入口。
 `Health:SetVal` 判断死亡，并推送 world 级 `entity_death` 与实体级 `death`。
 
-##### `0x62012151` 搜索信号
+#### `0x62012151` 搜索信号
 
 搜索 `DoDelta`、`SetVal`、`entity_death`、`death`、`healthdelta` 和 `CanFadeOut`。
 
-#### `0x62012160` `dst-scripts/standardcomponents.lua`
+### `0x62012160` 主锚点 / `dst-scripts/standardcomponents.lua`
 
 非武器伤害也可能从标准 helper 进入组件。
 例如通用燃烧逻辑会调用 `health:DoFireDamage`，而不是经过 `ACTIONS.ATTACK`。
 
-##### `0x62012161` 搜索信号
+#### `0x62012161` 搜索信号
 
 搜索 `DoFireDamage`、`DropTarget`、`perishable` 和 `farming_manager`。
 
@@ -114,75 +112,61 @@ flowchart TD
     K --> L["healthdelta / death / entity_death"]
 ~~~
 
-### `0x62013100` 动作到移动
-
-#### `0x62013110` 距离和抵达
+### `0x62013110` 动作到移动 / 距离和抵达
 
 攻击不一定立即执行。
 当 action 需要接近目标时，`locomotor` 保存 buffered action 并移动到可执行距离。
 
-##### `0x62013111` 边界条件
+#### `0x62013111` 边界条件
 
 校验攻击失败时先看距离、目标有效性和 cooldown。
 不要直接跳到 `Health:DoDelta`。
 
-### `0x62013200` SG 到 Combat
-
-#### `0x62013210` 动画窗口
+### `0x62013210` SG 到 Combat / 动画窗口
 
 玩家常通过 SG 状态进入攻击动画。
 状态标签影响本地预测、连击、远程武器和特殊攻击分支。
 
-##### `0x62013211` 边界条件
+#### `0x62013211` 边界条件
 
 非玩家实体或 projectile 也可能调用 `Combat:DoAttack` 或 `Combat:GetAttacked`。
 因此 SG 不是战斗结算的唯一入口。
 
-### `0x62013300` Combat 到 Health
-
-#### `0x62013310` 攻击方和受击方分工
+### `0x62013310` Combat 到 Health / 攻击方和受击方分工
 
 攻击方的 `DoAttack` 计算基础伤害并调用目标 `combat:GetAttacked`。
 受击方的 `GetAttacked` 执行防御、护甲、闪避和特殊伤害结算。
 最后由 `health:DoDelta` 改变生命。
 
-##### `0x62013311` 验证点
+#### `0x62013311` 验证点
 
 `GetAttacked` 调用 `health:DoDelta(-damage, ...)`。
 `DoDelta` 推送 `healthdelta`。
 `SetVal` 在死亡时推送 `entity_death` 和 `death`。
 
-## `0x62014000` 结构细节
-
-### `0x62014100` 武器与伤害
-
-#### `0x62014110` `weapon.lua` 的伤害接口
+## `0x62014110` 结构细节 / 武器与伤害 / `weapon.lua` 的伤害接口
 
 `Weapon:SetDamage` 写入武器基础伤害。
 `Weapon:GetDamage` 会考虑函数型伤害、`damagetypebonus` 和特殊伤害表。
 `Weapon:OnAttack` 是命中后的武器回调。
 
-##### `0x62014111` 需要核对的字段
+### `0x62014111` 需要核对的字段
 
 用 `spear.lua` 验证固定伤害。
 用 `hambat.lua` 验证 `SetOnAttack(UpdateDamage)`。
 用 `slingshotammo.lua` 验证 projectile 与特殊弹药分支。
 
-### `0x62014200` 死亡与掉落边界
-
-#### `0x62014210` Health 只负责生命和死亡事件
+## `0x62014210` 结构细节 / 死亡与掉落边界 / Health 只负责生命和死亡事件
 
 `health.lua` 不直接决定所有掉落。
 掉落通常由 prefab 或 `lootdropper` 监听死亡相关状态和事件。
 
-##### `0x62014211` 边界条件
+### `0x62014211` 边界条件
 
 如果要解释战利品，必须跳到具体 prefab 的 `lootdropper` 设置。
 不要把 `Health:SetVal` 误写成掉落执行点。
 
-## `0x62015000` 阅读与验证路线
-
-### `0x62015100` 从哪里开始读源码
+## `0x62015100` 阅读与验证路线 / 从哪里开始读源码
 
 ~~~bash
 rg -n "ACTIONS\\.ATTACK\\.fn|DoAttack|propattack|thrusting|helmsplitting" \
@@ -210,14 +194,14 @@ rg -n "DoFireDamage|DropTarget|perishable|farming_manager" \
   dst-scripts/standardcomponents.lua
 ~~~
 
-#### `0x62015110` 推荐顺序
+### `0x62015110` 推荐顺序
 
 先读 `ACTIONS.ATTACK.fn`。
 再读 `SGwilson.lua` 的攻击 ActionHandler。
 然后转到 `combat.lua` 的 `DoAttack` 与 `GetAttacked`。
 最后用 `health.lua` 验证生命变化和死亡事件。
 
-##### `0x62015111` 最小闭环
+#### `0x62015111` 最小闭环
 
 用普通矛攻击作为样例。
 从 `spear.lua` 的 `SetDamage` 追到 `Combat:CalcDamage`，再追到目标 `Combat:GetAttacked` 和

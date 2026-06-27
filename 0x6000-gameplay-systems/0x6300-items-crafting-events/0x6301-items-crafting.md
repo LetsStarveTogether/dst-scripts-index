@@ -4,13 +4,7 @@
 这里不做完整配方清单。
 完整文件目录仍放在 `0x8000-reference`。
 
-## `0x63011000` 本页定位
-
-### `0x63011100` 要回答的运行时问题
-
-#### `0x63011110` `Recipe2` 到 `Builder:DoBuild`
-
-##### `0x63011111` 验证点
+## `0x63011111` 本页定位 / 要回答的运行时问题 / `Recipe2` 到 `Builder:DoBuild` / 验证点
 
 关键问题不是“某个物品在哪一行定义”，而是 `Recipe2`、`AllRecipes`、`Builder`、`Inventory` 和 `SpawnPrefab`
 分别在什么时候参与。
@@ -19,11 +13,7 @@
 `dst-scripts/widgets/redux/craftingmenu_hud.lua` 只计算可见状态和点击入口。
 服务端权威结果在 `dst-scripts/components/builder.lua`。
 
-### `0x63011200` 与前端制作页的边界
-
-#### `0x63011210` 本页只追玩法副作用
-
-##### `0x63011211` 不重复 UI 细节
+## `0x63011211` 本页定位 / 与前端制作页的边界 / 本页只追玩法副作用 / 不重复 UI 细节
 
 `0x700000` 区域解释 crafting UI 面板、筛选和显示。
 本页只把 UI 当作输入端，重点核对 `builder_replica`、RPC、`Builder:MakeRecipe*`、`Builder:DoBuild`
@@ -44,22 +34,14 @@
 | `dst-scripts/actions.lua` | `ACTIONS.BUILD.fn` | `BufferedAction` 到 `DoBuild` |
 | `dst-scripts/components/inventory.lua` | `GiveItem` | 产物进入背包或容器 |
 
-### `0x63012100` 配方数据锚点
-
-#### `0x63012110` `dst-scripts/recipe.lua`
-
-##### `0x63012111` 搜索信号
+### `0x63012111` 配方数据锚点 / `dst-scripts/recipe.lua` / 搜索信号
 
 `Recipe2` 继承 `Recipe`，最终把对象写入 `AllRecipes[name]`。
 `GetValidRecipe` 会拒绝 deconstruction recipe，并检查 `require_special_event` 是否由 `IsSpecialEventActive`
 满足。
 因此活动配方不能只看 `recipes.lua` 是否声明，还要看当前世界活动开关。
 
-### `0x63012200` 执行锚点
-
-#### `0x63012210` `dst-scripts/components/builder.lua`
-
-##### `0x63012211` 搜索信号
+### `0x63012211` 执行锚点 / `dst-scripts/components/builder.lua` / 搜索信号
 
 `Builder:MakeRecipe` 不是直接生成物品。
 它创建 `BufferedAction(self.inst, nil, ACTIONS.BUILD, ...)` 并推给 `locomotor`。
@@ -84,44 +66,26 @@ flowchart TD
     K --> L["inventory.lua: GiveItem or world placement"]
 ~~~
 
-### `0x63013100` 菜单制作
-
-#### `0x63013110` `MakeRecipeFromMenu`
-
-##### `0x63013111` 边界条件
+### `0x63013111` 菜单制作 / `MakeRecipeFromMenu` / 边界条件
 
 菜单制作只适用于没有 placer 的普通物品。
 `Builder:MakeRecipeFromMenu` 先要求背包 UI 没有被玩法关闭，再检查 `HasIngredients`、`KnowsRecipe`、
 临时科技、角色标签、角色技能和可学习状态。
 材料不足时，它还会尝试 `_TryMakeIngredientRecipe`，把缺失材料可被制作的情况变成子配方制作链。
 
-### `0x63013200` 放置制作
-
-#### `0x63013210` `BufferBuild` 与 `MakeRecipeAtPoint`
-
-##### `0x63013211` 边界条件
+### `0x63013211` 放置制作 / `BufferBuild` 与 `MakeRecipeAtPoint` / 边界条件
 
 带 placer 的建筑和部署物通常先走 `BufferBuild`。
 `BufferBuild` 预扣材料并把 `buffered_builds[recname]` 标记为 true。
 随后 `MakeRecipeAtPoint` 还要检查 `TheWorld.Map:CanDeployRecipeAtPoint(pt, recipe, rot)`。
 这也是船上禁建逻辑、地形测试和旋转合法性进入制作链的地方。
 
-### `0x63013300` 动作执行
-
-#### `0x63013310` `ACTIONS.BUILD.fn`
-
-##### `0x63013311` 验证点
+### `0x63013311` 动作执行 / `ACTIONS.BUILD.fn` / 验证点
 
 `ACTIONS.BUILD.fn` 只把动作转回 `act.doer.components.builder:DoBuild(...)`。
 状态机负责播放 build 动作和预测边界，但权威的生成、扣材料、事件推送仍在 `Builder:DoBuild`。
 
-## `0x63014000` 结构细节
-
-### `0x63014100` `Recipe2` 字段
-
-#### `0x63014110` 可影响运行结果的字段
-
-##### `0x63014111` 需要核对的字段
+## `0x63014111` 结构细节 / `Recipe2` 字段 / 可影响运行结果的字段 / 需要核对的字段
 
 - `product` 决定 `SpawnPrefab(recipe.product)` 的目标 prefab。
 - `placer` 决定是否进入放置制作链。
@@ -131,22 +95,14 @@ flowchart TD
 - `dropitem` 会让产物掉到世界，而不是直接 `Inventory:GiveItem`。
 - `numtogive` 和 `override_numtogive_fn` 会改变产物数量。
 
-### `0x63014200` 背包与世界副作用
-
-#### `0x63014210` `Inventory:GiveItem` 与 `buildstructure`
-
-##### `0x63014211` 需要核对的分支
+## `0x63014211` 结构细节 / 背包与世界副作用 / `Inventory:GiveItem` 与 `buildstructure` / 需要核对的分支
 
 `Builder:DoBuild` 对 `prod.components.inventoryitem` 做分支。
 有 `inventoryitem` 的产物会尝试装备、堆叠或 `GiveOrDropItem`。
 没有 `inventoryitem` 的产物会设置位置和旋转，并推送 `buildstructure` 与 `onbuilt`。
 因此“制作成功”不总是等于“物品进入背包”。
 
-### `0x63014300` 海洋配方交界
-
-#### `0x63014310` `boat_item`、`anchor_item` 与 `mast_item`
-
-##### `0x63014311` 搜索信号
+## `0x63014311` 结构细节 / 海洋配方交界 / `boat_item`、`anchor_item` 与 `mast_item` / 搜索信号
 
 海洋物品仍由 `recipes.lua` 声明。
 例如 `boat_item`、`anchor_item`、`mast_item`、`boat_rotator_kit` 和 `boat_magnet_kit` 都是 `Recipe2`
@@ -154,9 +110,7 @@ flowchart TD
 这些 recipe 的产物再进入 `dst-scripts/prefabs/boat.lua`、`dst-scripts/prefabs/anchor.lua`
 或 `dst-scripts/prefabs/mast.lua` 的 prefab 装配。
 
-## `0x63015000` 阅读与验证路线
-
-### `0x63015100` 从哪里开始读源码
+## `0x63015100` 阅读与验证路线 / 从哪里开始读源码
 
 ~~~bash
 rg -n "Recipe2|AllRecipes|GetValidRecipe|require_special_event" \
@@ -174,9 +128,7 @@ rg -n "MakeRecipe|DoBuild|ACTIONS.BUILD|GiveItem|SpawnPrefab" \
   dst-scripts/components/inventory.lua
 ~~~
 
-#### `0x63015110` 推荐顺序
-
-##### `0x63015111` 最小闭环
+### `0x63015111` 推荐顺序 / 最小闭环
 
 先读 `dst-scripts/recipe.lua` 的 `Recipe2` 和 `GetValidRecipe`。
 再读 `dst-scripts/recipes.lua` 中一个简单 `Recipe2` 条目。
